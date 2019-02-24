@@ -75,6 +75,16 @@ export function fillRect(
   );
 }
 
+export function drawImage(
+  img: HTMLImageElement,
+  x: number,
+  y: number,
+  blImg: HTMLImageElement
+) {
+  context.drawImage(img, x, y);
+  bloomContext.drawImage(blImg, x / bloomScale, y / bloomScale);
+}
+
 function clear() {
   context.fillStyle = "black";
   context.fillRect(0, 0, size, size);

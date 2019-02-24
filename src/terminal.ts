@@ -1,5 +1,6 @@
 import { letterPatterns } from "./util/letterPattern";
 import * as view from "./view";
+import { range } from "./util/math";
 
 const rgbNumbers = [
   0xe91e63,
@@ -20,21 +21,49 @@ const rgbObjects = rgbNumbers.map(n => {
 const colorChars = "rgybpcw";
 
 let dotPatterns: { x: number; y: number; color: string }[][];
+let letterImages: HTMLImageElement[];
+let bloomLetterImages: HTMLImageElement[];
 
 export function init() {
+  const cvs = document.createElement("canvas");
+  cvs.width = cvs.height = 6 * 4;
+  const ctx = cvs.getContext("2d");
+  ctx.fillStyle = "#eee";
+  letterImages = range(letterPatterns.length).map(() =>
+    document.createElement("img")
+  );
+  const blCvs = document.createElement("canvas");
+  const blScl = view.bloomScale;
+  blCvs.width = blCvs.height = (8 * 4) / blScl;
+  const blCtx = blCvs.getContext("2d");
+  blCtx.fillStyle = "#bbb";
+  bloomLetterImages = range(letterPatterns.length).map(() =>
+    document.createElement("img")
+  );
   dotPatterns = [];
-  letterPatterns.forEach(lp => {
+  letterPatterns.forEach((lp, i) => {
     let dots = [];
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    blCtx.clearRect(0, 0, blCvs.width, blCvs.height);
     const p = lp.split("\n").slice(1, 6);
     p.forEach((l, y) => {
       for (let x = 0; x < 5; x++) {
         const c = l.charAt(x);
         if (c !== "" && colorChars.indexOf(c) >= 0) {
           dots.push({ x, y, color: c });
+          ctx.fillRect((x + 1) * 4, (y + 1) * 4, 4, 4);
+          blCtx.fillRect(
+            ((x + 1) * 4 - 2) / blScl,
+            ((y + 1) * 4 - 2) / blScl,
+            8 / blScl,
+            8 / blScl
+          );
         }
       }
     });
     dotPatterns.push(dots);
+    letterImages[i].src = cvs.toDataURL();
+    bloomLetterImages[i].src = blCvs.toDataURL();
   });
 }
 
@@ -59,10 +88,10 @@ export function printChar(
   _y: number,
   color = "w"
 ): PrintCharResult {
-  const cc = c.charCodeAt(0);
-  if (cc === 0xa) {
+  const cca = c.charCodeAt(0);
+  if (cca === 0xa) {
     return "cr";
-  } else if (cc < 0x21 || cc > 0x60) {
+  } else if (cca < 0x21 || cca > 0x60) {
     return "space";
   }
   const x = Math.floor(_x);
@@ -71,7 +100,8 @@ export function printChar(
     return "char";
   }
   const rgb = rgbObjects[colorChars.indexOf(color)];
-  dotPatterns[cc - 0x21].forEach(d => {
+  const cc = cca - 0x21;
+  /*dotPatterns[cc].forEach(d => {
     view.fillRect(
       x * 24 + d.x * 4 + 24 + 4 + 2,
       y * 24 + d.y * 4 + 24 + 4 + 2,
@@ -80,6 +110,12 @@ export function printChar(
       rgb,
       0.7
     );
-  });
+  });*/
+  view.drawImage(
+    letterImages[cc],
+    x * 24 + 24,
+    y * 24 + 24,
+    bloomLetterImages[cc]
+  );
   return "char";
 }
