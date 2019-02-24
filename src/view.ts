@@ -1,15 +1,15 @@
+import * as fx from "./glfx/";
+import colorShift from "./glfx/shader/colorshift";
+import scanlines from "./glfx/shader/scanlines";
 //import * as gcc from "gif-capture-canvas";
 
 export const size = 432;
-export const bloomScale = 8;
+export let fxCanvas;
 export let canvas: HTMLCanvasElement;
 export let context: CanvasRenderingContext2D;
-export let bloomCanvas: HTMLCanvasElement;
-export let bloomContext: CanvasRenderingContext2D;
 
 let updateFunc: Function;
-let capturingCanvas: HTMLCanvasElement;
-let capturingContext: CanvasRenderingContext2D;
+let texture;
 let isCapturing = false;
 
 export function init(
@@ -23,83 +23,24 @@ export function init(
     _initFunc();
     return;
   }
+  fxCanvas = fx.canvas();
+  fxCanvas.colorShift = fx.wrap(colorShift);
+  fxCanvas.scanlines = fx.wrap(scanlines);
+  fxCanvas.classList.add("centering");
   canvas = document.createElement("canvas");
-  canvas.classList.add("centering");
   canvas.width = canvas.height = size;
   context = canvas.getContext("2d");
-  bloomCanvas = document.createElement("canvas");
-  bloomCanvas.classList.add("centering");
-  bloomCanvas.width = bloomCanvas.height = size / bloomScale;
-  bloomCanvas.style.opacity = "0.7";
-  bloomContext = bloomCanvas.getContext("2d");
-  document.body.appendChild(canvas);
-  document.body.appendChild(bloomCanvas);
+  texture = fxCanvas.texture(canvas);
+  document.body.appendChild(fxCanvas);
   if (isCapturing) {
     //gcc.setOptions({ scale: 0.5, capturingFps: 30 });
-    capturingCanvas = document.createElement("canvas");
-    capturingCanvas.width = size;
-    capturingCanvas.height = size / 2;
-    capturingContext = capturingCanvas.getContext("2d");
   }
   _initFunc();
   update();
 }
 
-const bloomRatio = 1.5;
-
-export function fillRect(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  color: { r: number; g: number; b: number },
-  brightness: number
-) {
-  const b = Math.sqrt(brightness);
-  context.fillStyle = `rgb(${Math.floor(color.r * b)},${Math.floor(
-    color.g * b
-  )},${Math.floor(color.b * b)})`;
-  context.fillRect(x - width / 2, y - width / 2, width, height);
-  bloomContext.fillStyle = `rgb(${Math.floor(
-    color.r * brightness * bloomRatio
-  )},${Math.floor(color.g * brightness * bloomRatio)},${Math.floor(
-    color.b * brightness * bloomRatio
-  )})`;
-  const w = width * brightness;
-  const h = height * brightness;
-  bloomContext.fillRect(
-    (x - w) / bloomScale,
-    (y - h) / bloomScale,
-    (w * 2) / bloomScale,
-    (h * 2) / bloomScale
-  );
-}
-
-export function drawImage(
-  img: HTMLImageElement,
-  x: number,
-  y: number,
-  blImg: HTMLImageElement
-) {
-  context.drawImage(img, x, y);
-  bloomContext.drawImage(blImg, x / bloomScale, y / bloomScale);
-}
-
-function clear() {
-  context.fillStyle = "black";
-  context.fillRect(0, 0, size, size);
-  bloomContext.clearRect(0, 0, size / bloomScale, size / bloomScale);
-}
-
-function capture() {
-  capturingContext.fillStyle = "black";
-  capturingContext.fillRect(0, 0, size, size / 2);
-  capturingContext.drawImage(canvas, size / 4, 0, size / 2, size / 2);
-  capturingContext.drawImage(bloomCanvas, size / 4, 0, size / 2, size / 2);
-  //gcc.capture(capturingCanvas);
-}
-
 let lastFrameTime = 0;
+let ticks = 0;
 
 function update() {
   requestAnimationFrame(update);
@@ -108,10 +49,20 @@ function update() {
   if (timeSinceLast < 1000 / 60 - 5) {
     return;
   }
-  clear();
+  context.fillStyle = "black";
+  context.fillRect(0, 0, size, size);
   updateFunc();
+  texture.loadContentsOf(canvas);
+  fxCanvas
+    .draw(texture)
+    .colorShift()
+    .scanlines(ticks * canvas.height * 0.000005)
+    .bulgePinch(canvas.width / 2, canvas.height / 2, canvas.width * 0.8, 0.1)
+    .vignette(0.2, 0.5)
+    .update();
   if (isCapturing) {
-    capture();
+    //gcc.capture(fxCanvas);
   }
+  ticks++;
   lastFrameTime = now;
 }
