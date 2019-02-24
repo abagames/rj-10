@@ -19,35 +19,10 @@ const rgbObjects = rgbNumbers.map(n => {
   };
 });
 const colorChars = "rgybpcw";
-
-let dotPatterns: { x: number; y: number; color: string }[][];
-let letterImages: HTMLImageElement[];
+let letterImages: HTMLImageElement[][];
 
 export function init() {
-  const cvs = document.createElement("canvas");
-  cvs.width = cvs.height = 6 * 4;
-  const ctx = cvs.getContext("2d");
-  ctx.fillStyle = "#eee";
-  letterImages = range(letterPatterns.length).map(() =>
-    document.createElement("img")
-  );
-  dotPatterns = [];
-  letterPatterns.forEach((lp, i) => {
-    let dots = [];
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
-    const p = lp.split("\n").slice(1, 6);
-    p.forEach((l, y) => {
-      for (let x = 0; x < 5; x++) {
-        const c = l.charAt(x);
-        if (c !== "" && colorChars.indexOf(c) >= 0) {
-          dots.push({ x, y, color: c });
-          ctx.fillRect((x + 1) * 4, (y + 1) * 4, 4, 4);
-        }
-      }
-    });
-    dotPatterns.push(dots);
-    letterImages[i].src = cvs.toDataURL();
-  });
+  letterImages = letterPatterns.map(lp => createLetterImages(lp));
 }
 
 export function print(str: string, x: number, y: number, color = "w") {
@@ -82,8 +57,35 @@ export function printChar(
   if (x < 0 || x > 15 || y < 0 || y > 15) {
     return "char";
   }
-  const rgb = rgbObjects[colorChars.indexOf(color)];
   const cc = cca - 0x21;
-  view.context.drawImage(letterImages[cc], x * 24 + 24, y * 24 + 24);
+  const ci = colorChars.indexOf(color);
+  view.context.drawImage(letterImages[cc][ci], x * 24 + 24, y * 24 + 24);
   return "char";
+}
+
+function createLetterImages(pattern: string) {
+  const cvs = document.createElement("canvas");
+  cvs.width = cvs.height = 6 * 4;
+  const ctx = cvs.getContext("2d");
+  const p = pattern.split("\n").slice(1, 6);
+  return range(rgbObjects.length).map(i => {
+    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    p.forEach((l, y) => {
+      for (let x = 0; x < 5; x++) {
+        const c = l.charAt(x);
+        let ci = colorChars.indexOf(c);
+        if (c !== "" && ci >= 0) {
+          if (ci === 6) {
+            ci = i;
+          }
+          const rgb = rgbObjects[ci];
+          ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+          ctx.fillRect((x + 1) * 4, (y + 1) * 4, 4, 4);
+        }
+      }
+    });
+    const img = document.createElement("img");
+    img.src = cvs.toDataURL();
+    return img;
+  });
 }
