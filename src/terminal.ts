@@ -33,10 +33,16 @@ export function init() {
   letterImages = letterPatterns.map(lp => createLetterImages(lp, 1, 1));
 }
 
-export function print(str: string, x: number, y: number, color = "w") {
+export function print(
+  str: string,
+  x: number,
+  y: number,
+  color = "w",
+  angleIndex = 0
+) {
   const bx = x;
   for (let i = 0; i < str.length; i++) {
-    const r = printChar(str[i], x, y, color);
+    const r = printChar(str[i], x, y, color, angleIndex);
     if (r === "cr") {
       x = bx;
       y++;
@@ -52,7 +58,8 @@ export function printChar(
   c: string,
   _x: number,
   _y: number,
-  color = "w"
+  color = "w",
+  angleIndex = 0
 ): PrintCharResult {
   const cca = c.charCodeAt(0);
   if (cca === 0xa) {
@@ -68,18 +75,27 @@ export function printChar(
   const cc = cca - 0x21;
   const ix = (x + 1) * letterSize;
   const iy = (y + 1) * letterSize;
-  if (color === "w") {
+  if (color === "w" && angleIndex % 4 === 0) {
     view.context.drawImage(letterImages[cc], ix, iy);
     return;
   }
   letterContext.globalCompositeOperation = "source-over";
   letterContext.clearRect(0, 0, letterSize, letterSize);
-  letterContext.drawImage(letterImages[cc], 0, 0);
-  letterContext.globalCompositeOperation = "source-in";
-  const rgb = rgbObjects[colorChars.indexOf(color)];
-  letterContext.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
-  letterContext.fillRect(0, 0, letterSize, letterSize);
-
+  if (angleIndex % 4 === 0) {
+    letterContext.drawImage(letterImages[cc], 0, 0);
+  } else {
+    letterContext.save();
+    letterContext.translate(letterSize / 2, letterSize / 2);
+    letterContext.rotate((Math.PI / 2) * angleIndex);
+    letterContext.drawImage(letterImages[cc], -letterSize / 2, -letterSize / 2);
+    letterContext.restore();
+  }
+  if (color !== "w") {
+    letterContext.globalCompositeOperation = "source-in";
+    const rgb = rgbObjects[colorChars.indexOf(color)];
+    letterContext.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+    letterContext.fillRect(0, 0, letterSize, letterSize);
+  }
   view.context.drawImage(letterCanvas, ix, iy);
   return "char";
 }
