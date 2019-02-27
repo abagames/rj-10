@@ -19,9 +19,17 @@ const rgbObjects = rgbNumbers.map(n => {
   };
 });
 const colorChars = "rgybpcw";
-let letterImages: HTMLImageElement[][];
+const dotCount = 6;
+const dotSize = 4;
+const letterSize = dotCount * dotSize;
+let letterImages: HTMLImageElement[];
+let letterCanvas: HTMLCanvasElement;
+let letterContext: CanvasRenderingContext2D;
 
 export function init() {
+  letterCanvas = document.createElement("canvas");
+  letterCanvas.width = letterCanvas.height = letterSize;
+  letterContext = letterCanvas.getContext("2d");
   letterImages = letterPatterns.map(lp => createLetterImages(lp, 1, 1));
 }
 
@@ -58,8 +66,21 @@ export function printChar(
     return "char";
   }
   const cc = cca - 0x21;
-  const ci = colorChars.indexOf(color);
-  view.context.drawImage(letterImages[cc][ci], x * 24 + 24, y * 24 + 24);
+  const ix = (x + 1) * letterSize;
+  const iy = (y + 1) * letterSize;
+  if (color === "w") {
+    view.context.drawImage(letterImages[cc], ix, iy);
+    return;
+  }
+  letterContext.globalCompositeOperation = "source-over";
+  letterContext.clearRect(0, 0, letterSize, letterSize);
+  letterContext.drawImage(letterImages[cc], 0, 0);
+  letterContext.globalCompositeOperation = "source-in";
+  const rgb = rgbObjects[colorChars.indexOf(color)];
+  letterContext.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+  letterContext.fillRect(0, 0, letterSize, letterSize);
+
+  view.context.drawImage(letterCanvas, ix, iy);
   return "char";
 }
 
@@ -69,34 +90,31 @@ function createLetterImages(
   paddingY = 0,
   isSkippingFirstLine = true
 ) {
-  const cvs = document.createElement("canvas");
-  cvs.width = cvs.height = 6 * 4;
-  const ctx = cvs.getContext("2d");
+  letterContext.clearRect(0, 0, letterSize, letterSize);
   let p = pattern.split("\n");
   if (isSkippingFirstLine) {
     p = p.slice(1);
   }
-  return range(rgbObjects.length).map(i => {
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
-    p.forEach((l, y) => {
-      if (y + paddingY >= 6) {
-        return;
+  p.forEach((l, y) => {
+    if (y + paddingY >= dotCount) {
+      return;
+    }
+    for (let x = 0; x < dotCount - paddingX; x++) {
+      const c = l.charAt(x);
+      let ci = colorChars.indexOf(c);
+      if (c !== "" && ci >= 0) {
+        const rgb = rgbObjects[ci];
+        letterContext.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+        letterContext.fillRect(
+          (x + paddingX) * dotSize,
+          (y + paddingY) * dotSize,
+          dotSize,
+          dotSize
+        );
       }
-      for (let x = 0; x < 6 - paddingX; x++) {
-        const c = l.charAt(x);
-        let ci = colorChars.indexOf(c);
-        if (c !== "" && ci >= 0) {
-          if (ci === 6) {
-            ci = i;
-          }
-          const rgb = rgbObjects[ci];
-          ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
-          ctx.fillRect((x + paddingX) * 4, (y + paddingY) * 4, 4, 4);
-        }
-      }
-    });
-    const img = document.createElement("img");
-    img.src = cvs.toDataURL();
-    return img;
+    }
   });
+  const img = document.createElement("img");
+  img.src = letterCanvas.toDataURL();
+  return img;
 }
