@@ -22,7 +22,7 @@ const colorChars = "rgybpcw";
 let letterImages: HTMLImageElement[][];
 
 export function init() {
-  letterImages = letterPatterns.map(lp => createLetterImages(lp));
+  letterImages = letterPatterns.map(lp => createLetterImages(lp, 1, 1));
 }
 
 export function print(str: string, x: number, y: number, color = "w") {
@@ -63,15 +63,26 @@ export function printChar(
   return "char";
 }
 
-function createLetterImages(pattern: string) {
+function createLetterImages(
+  pattern: string,
+  paddingX = 0,
+  paddingY = 0,
+  isSkippingFirstLine = true
+) {
   const cvs = document.createElement("canvas");
   cvs.width = cvs.height = 6 * 4;
   const ctx = cvs.getContext("2d");
-  const p = pattern.split("\n").slice(1, 6);
+  let p = pattern.split("\n");
+  if (isSkippingFirstLine) {
+    p = p.slice(1);
+  }
   return range(rgbObjects.length).map(i => {
     ctx.clearRect(0, 0, cvs.width, cvs.height);
     p.forEach((l, y) => {
-      for (let x = 0; x < 5; x++) {
+      if (y + paddingY >= 6) {
+        return;
+      }
+      for (let x = 0; x < 6 - paddingX; x++) {
         const c = l.charAt(x);
         let ci = colorChars.indexOf(c);
         if (c !== "" && ci >= 0) {
@@ -80,7 +91,7 @@ function createLetterImages(pattern: string) {
           }
           const rgb = rgbObjects[ci];
           ctx.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
-          ctx.fillRect((x + 1) * 4, (y + 1) * 4, 4, 4);
+          ctx.fillRect((x + paddingX) * 4, (y + paddingY) * 4, 4, 4);
         }
       }
     });
