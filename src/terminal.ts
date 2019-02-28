@@ -2,6 +2,7 @@ import { letterPatterns } from "./util/letterPattern";
 import * as view from "./view";
 
 const rgbNumbers = [
+  0x000000,
   0xe91e63,
   0x4caf50,
   0xffeb3b,
@@ -17,7 +18,7 @@ const rgbObjects = rgbNumbers.map(n => {
     b: n & 0xff
   };
 });
-const colorChars = "rgybpcw";
+const colorChars = " rgybpcw";
 const dotCount = 6;
 const dotSize = 4;
 const letterSize = dotCount * dotSize;
@@ -33,7 +34,8 @@ export function init() {
 }
 
 export type Options = {
-  color?: "r" | "g" | "y" | "b" | "p" | "c" | "w";
+  color?: " " | "r" | "g" | "y" | "b" | "p" | "c" | "w";
+  backgroundColor?: " " | "r" | "g" | "y" | "b" | "p" | "c" | "w";
   angleIndex?: number;
   isMirrorX?: boolean;
   isMirrorY?: boolean;
@@ -41,6 +43,7 @@ export type Options = {
 
 const defaultOptions: Options = {
   color: "w",
+  backgroundColor: " ",
   angleIndex: 0,
   isMirrorX: false,
   isMirrorY: false
@@ -85,6 +88,7 @@ export function printChar(
   const iy = (y + 1) * letterSize;
   if (
     options.color === "w" &&
+    options.backgroundColor === " " &&
     options.angleIndex % 4 === 0 &&
     !options.isMirrorX &&
     !options.isMirrorY
@@ -119,6 +123,11 @@ export function printChar(
     letterContext.fillRect(0, 0, letterSize, letterSize);
     letterContext.globalCompositeOperation = "source-over";
   }
+  if (options.backgroundColor !== " ") {
+    const rgb = rgbObjects[colorChars.indexOf(options.backgroundColor)];
+    view.context.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+    view.context.fillRect(ix, iy, letterSize, letterSize);
+  }
   view.context.drawImage(letterCanvas, ix, iy);
   return "char";
 }
@@ -141,7 +150,7 @@ function createLetterImages(
     for (let x = 0; x < dotCount - paddingX; x++) {
       const c = l.charAt(x);
       let ci = colorChars.indexOf(c);
-      if (c !== "" && ci >= 0) {
+      if (c !== "" && ci > 0) {
         const rgb = rgbObjects[ci];
         letterContext.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
         letterContext.fillRect(
