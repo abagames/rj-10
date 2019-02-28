@@ -75,7 +75,7 @@ export function printChar(
   const cca = c.charCodeAt(0);
   if (cca === 0xa) {
     return "cr";
-  } else if (cca < 0x21 || cca > 0x60) {
+  } else if (cca < 0x21 || cca > 0x7e) {
     return "space";
   }
   const x = Math.floor(_x);

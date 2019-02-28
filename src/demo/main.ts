@@ -11,7 +11,7 @@ function update() {
 QWERTYUIOP[]\\
 ASDFGHJKL;'
 ZXCVBNM,./
-:"<>?
+:"<>? \`{|}~
   `,
     0,
     0
