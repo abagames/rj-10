@@ -460,54 +460,194 @@ w w w
   w
 `,
   `
+wwwwww
+wwwwww
+wwwww
+wwwww
+wwww
+ww
 `,
   `
+ ww
+wwww
+wwww
+ ww
 `,
   `
+www
+www
+www
+
+
+
 `,
   `
+  ww
+  ww
+  ww
+  ww
+  ww
+  ww  
 `,
   `
+wwwwww
+wwwwww
+wwwwww
+
+
+
 `,
   `
+www
+www
+www
+   www
+   www
+   www
 `,
   `
+wwww
+w  w
+w  w
+wwww
 `,
   `
+  w
+ w w
+ w w
+w   w
+wwwww
 `,
   `
+  ww
+  ww
+wwww
+wwww
+
+
 `,
   `
+  ww
+  ww
+wwwwww
+wwwwww
+
+
 `,
   `
+  ww
+  ww
+wwwwwww
+wwwwwww
+  ww
+  ww
 `,
   `
+  w
+  w
+ww
+
+
+
 `,
   `
+ ww
+w  w
+w  w
+ ww
 `,
   `
+  w
+ w
+w
+
+
+
 `,
   `
+     w
+    w
+   w
+  w
+ w
+w
 `,
   `
+  ww
+  ww
+wwwwww
+  ww
+ w  w
+w    w
 `,
   `
+ wwww
+w    w
+ww  ww
+w    w
+w ww w
+ wwww 
 `,
   `
+wwww
+wwww
+wwww
+wwww
 `,
   `
+  w
+ www
+ www
+wwwww
+wwwww
 `,
   `
+wwwwww
+wwwww
+wwww
+www
+ww
+w
 `,
   `
+www
+www
+ww
+
+
+
 `,
   `
+w w w
+ w w w
+w w w
+ w w w
+w w w
+ w w w
 `,
   `
+w    w
+ w  w
+  ww
+  ww
+ w  w
+w    w
 `,
   `
+www
+ww
+w
+
+
+
 `,
   `
+     w
+     w
+    w
+    w
+  ww
+ww
 `,
   //{
   `

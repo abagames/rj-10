@@ -12,6 +12,8 @@ QWERTYUIOP[]\\
 ASDFGHJKL;'
 ZXCVBNM,./
 :"<>? \`{|}~
+abcdefghijkl
+mnopqrstuvwxyz
   `,
     0,
     0

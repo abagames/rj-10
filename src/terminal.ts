@@ -30,7 +30,7 @@ export function init() {
   letterCanvas = document.createElement("canvas");
   letterCanvas.width = letterCanvas.height = letterSize;
   letterContext = letterCanvas.getContext("2d");
-  letterImages = letterPatterns.map(lp => createLetterImages(lp, 1, 1));
+  letterImages = letterPatterns.map(lp => createLetterImages(lp));
 }
 
 export type Options = {
@@ -134,28 +134,31 @@ export function printChar(
 
 function createLetterImages(
   pattern: string,
-  paddingX = 0,
-  paddingY = 0,
-  isSkippingFirstLine = true
+  isSkippingFirstAndLastLine = true
 ) {
   letterContext.clearRect(0, 0, letterSize, letterSize);
   let p = pattern.split("\n");
-  if (isSkippingFirstLine) {
-    p = p.slice(1);
+  if (isSkippingFirstAndLastLine) {
+    p = p.slice(1, p.length - 1);
+  }
+  const ph = p.length;
+  let padding = Math.ceil((dotCount - ph) / 2);
+  if (padding < 0) {
+    padding = 0;
   }
   p.forEach((l, y) => {
-    if (y + paddingY >= dotCount) {
+    if (y + padding >= dotCount) {
       return;
     }
-    for (let x = 0; x < dotCount - paddingX; x++) {
+    for (let x = 0; x < dotCount - padding; x++) {
       const c = l.charAt(x);
       let ci = colorChars.indexOf(c);
       if (c !== "" && ci > 0) {
         const rgb = rgbObjects[ci];
         letterContext.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
         letterContext.fillRect(
-          (x + paddingX) * dotSize,
-          (y + paddingY) * dotSize,
+          (x + padding) * dotSize,
+          (y + padding) * dotSize,
           dotSize,
           dotSize
         );
