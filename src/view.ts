@@ -3,7 +3,7 @@ import colorShift from "./glfx/shader/colorshift";
 import scanlines from "./glfx/shader/scanlines";
 import * as gcc from "gif-capture-canvas";
 
-export const size = 432;
+export const size = 216;
 export let fxCanvas;
 export let canvas: HTMLCanvasElement;
 export let context: CanvasRenderingContext2D;
@@ -33,7 +33,7 @@ export function init(
   texture = fxCanvas.texture(canvas);
   document.body.appendChild(fxCanvas);
   if (isCapturing) {
-    gcc.setOptions({ scale: 0.5, capturingFps: 30 });
+    gcc.setOptions({ scale: 1, capturingFps: 30 });
   }
   _initFunc();
   update();

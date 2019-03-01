@@ -20,7 +20,7 @@ const rgbObjects = rgbNumbers.map(n => {
 });
 const colorChars = " rgybpcw";
 const dotCount = 6;
-const dotSize = 4;
+const dotSize = 2;
 const letterSize = dotCount * dotSize;
 let letterImages: HTMLImageElement[];
 let letterCanvas: HTMLCanvasElement;
