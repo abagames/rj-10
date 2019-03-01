@@ -7,6 +7,8 @@ export const size = 216;
 export let fxCanvas;
 export let canvas: HTMLCanvasElement;
 export let context: CanvasRenderingContext2D;
+let captureCanvas: HTMLCanvasElement;
+let captureContext: CanvasRenderingContext2D;
 
 let updateFunc: Function;
 let texture;
@@ -33,6 +35,11 @@ export function init(
   texture = fxCanvas.texture(canvas);
   document.body.appendChild(fxCanvas);
   if (isCapturing) {
+    captureCanvas = document.createElement("canvas");
+    captureCanvas.width = size * 2;
+    captureCanvas.height = size;
+    captureContext = captureCanvas.getContext("2d");
+    captureContext.fillStyle = "black";
     gcc.setOptions({ scale: 1, capturingFps: 30 });
   }
   _initFunc();
@@ -61,7 +68,9 @@ function update() {
     .vignette(0.2, 0.5)
     .update();
   if (isCapturing) {
-    gcc.capture(fxCanvas);
+    captureContext.fillRect(0, 0, size * 2, size);
+    captureContext.drawImage(fxCanvas, size / 2, 0);
+    gcc.capture(captureCanvas);
   }
   ticks++;
   lastFrameTime = now;
