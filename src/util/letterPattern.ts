@@ -482,12 +482,12 @@ www
 
 `,
   `
-  ww
-  ww
-  ww
-  ww
-  ww
-  ww  
+  w
+  w
+  w
+  w
+  w
+  w  
 `,
   `
 wwwwww
@@ -519,28 +519,28 @@ w   w
 wwwww
 `,
   `
-  ww
-  ww
-wwww
-wwww
+  w
+  w
+www
 
-
-`,
-  `
-  ww
-  ww
-wwwwww
-wwwwww
 
 
 `,
   `
-  ww
-  ww
+  w
+  w
+wwwwww
+
+
+
+`,
+  `
+  w
+  w
 wwwwwww
-wwwwwww
-  ww
-  ww
+  w
+  w
+  w
 `,
   `
   w
