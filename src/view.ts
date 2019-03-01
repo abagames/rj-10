@@ -1,7 +1,7 @@
 import * as fx from "./glfx/";
 import colorShift from "./glfx/shader/colorshift";
 import scanlines from "./glfx/shader/scanlines";
-//import * as gcc from "gif-capture-canvas";
+import * as gcc from "gif-capture-canvas";
 
 export const size = 432;
 export let fxCanvas;
@@ -33,7 +33,7 @@ export function init(
   texture = fxCanvas.texture(canvas);
   document.body.appendChild(fxCanvas);
   if (isCapturing) {
-    //gcc.setOptions({ scale: 0.5, capturingFps: 30 });
+    gcc.setOptions({ scale: 0.5, capturingFps: 30 });
   }
   _initFunc();
   update();
@@ -61,7 +61,7 @@ function update() {
     .vignette(0.2, 0.5)
     .update();
   if (isCapturing) {
-    //gcc.capture(fxCanvas);
+    gcc.capture(fxCanvas);
   }
   ticks++;
   lastFrameTime = now;
