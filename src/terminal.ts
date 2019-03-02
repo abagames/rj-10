@@ -39,6 +39,7 @@ export type Options = {
   angleIndex?: number;
   isMirrorX?: boolean;
   isMirrorY?: boolean;
+  scale?: number;
 };
 
 const defaultOptions: Options = {
@@ -46,7 +47,8 @@ const defaultOptions: Options = {
   backgroundColor: " ",
   angleIndex: 0,
   isMirrorX: false,
-  isMirrorY: false
+  isMirrorY: false,
+  scale: 1
 };
 
 export function print(str: string, x: number, y: number, _options?: Options) {
@@ -56,9 +58,9 @@ export function print(str: string, x: number, y: number, _options?: Options) {
     const r = printChar(str[i], x, y, options);
     if (r === "cr") {
       x = bx;
-      y++;
+      y += options.scale;
     } else {
-      x++;
+      x += options.scale;
     }
   }
 }
@@ -80,20 +82,23 @@ export function printChar(
   }
   const x = Math.floor(_x);
   const y = Math.floor(_y);
-  if (x < 0 || x > 15 || y < 0 || y > 15) {
+  if (x < 0 || x >= 16 || y < 0 || y >= 16) {
     return "char";
   }
   const cc = cca - 0x21;
   const ix = (x + 1) * letterSize;
   const iy = (y + 1) * letterSize;
+  const scaledSize = letterSize * options.scale;
+  const rgb = rgbObjects[colorChars.indexOf(options.backgroundColor)];
+  view.context.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+  view.context.fillRect(ix, iy, scaledSize, scaledSize);
   if (
     options.color === "w" &&
-    options.backgroundColor === " " &&
     options.angleIndex % 4 === 0 &&
     !options.isMirrorX &&
     !options.isMirrorY
   ) {
-    view.context.drawImage(letterImages[cc], ix, iy);
+    view.context.drawImage(letterImages[cc], ix, iy, scaledSize, scaledSize);
     return;
   }
   letterContext.clearRect(0, 0, letterSize, letterSize);
@@ -123,12 +128,7 @@ export function printChar(
     letterContext.fillRect(0, 0, letterSize, letterSize);
     letterContext.globalCompositeOperation = "source-over";
   }
-  if (options.backgroundColor !== " ") {
-    const rgb = rgbObjects[colorChars.indexOf(options.backgroundColor)];
-    view.context.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
-    view.context.fillRect(ix, iy, letterSize, letterSize);
-  }
-  view.context.drawImage(letterCanvas, ix, iy);
+  view.context.drawImage(letterCanvas, ix, iy, scaledSize, scaledSize);
   return "char";
 }
 

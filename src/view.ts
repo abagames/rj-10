@@ -32,6 +32,7 @@ export function init(
   canvas = document.createElement("canvas");
   canvas.width = canvas.height = size;
   context = canvas.getContext("2d");
+  context.imageSmoothingEnabled = false;
   texture = fxCanvas.texture(canvas);
   document.body.appendChild(fxCanvas);
   if (isCapturing) {
