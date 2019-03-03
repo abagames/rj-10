@@ -18,7 +18,6 @@ const rgbObjects = rgbNumbers.map(n => {
     b: n & 0xff
   };
 });
-const colorChars = " rgybpcw";
 const dotCount = 6;
 const dotSize = 2;
 const letterSize = dotCount * dotSize;
@@ -33,36 +32,105 @@ export function init() {
   letterImages = letterPatterns.map(lp => createLetterImages(lp));
 }
 
+const colorChars = "lrgybpcw";
+type ColorChars = "l" | "r" | "g" | "y" | "b" | "p" | "c" | "w";
+
+function isColorChars(c: string): c is ColorChars {
+  return colorChars.indexOf(c) >= 0;
+}
+
+const rotationChars = "kljhnmbvopiu9087";
+
 export type Options = {
-  color?: " " | "r" | "g" | "y" | "b" | "p" | "c" | "w";
-  backgroundColor?: " " | "r" | "g" | "y" | "b" | "p" | "c" | "w";
+  color?: ColorChars;
+  backgroundColor?: ColorChars;
   angleIndex?: number;
   isMirrorX?: boolean;
   isMirrorY?: boolean;
   scale?: number;
+  colorPattern?: string;
+  backgroundColorPattern?: string;
+  rotationPattern?: string;
 };
 
 const defaultOptions: Options = {
   color: "w",
-  backgroundColor: " ",
+  backgroundColor: "l",
   angleIndex: 0,
   isMirrorX: false,
   isMirrorY: false,
-  scale: 1
+  scale: 1,
+  colorPattern: undefined,
+  backgroundColorPattern: undefined,
+  rotationPattern: undefined
 };
 
 export function print(str: string, x: number, y: number, _options?: Options) {
-  const options = { ...defaultOptions, ..._options };
+  let options = { ...defaultOptions, ..._options };
   const bx = x;
+  const colorLines =
+    options.colorPattern != null ? options.colorPattern.split("\n") : undefined;
+  const backgroundColorLines =
+    options.backgroundColorPattern != null
+      ? options.backgroundColorPattern.split("\n")
+      : undefined;
+  const rotationLines =
+    options.rotationPattern != null
+      ? options.rotationPattern.split("\n")
+      : undefined;
+  let isChangingOption = false;
+  let lx = 0;
+  let ly = 0;
   for (let i = 0; i < str.length; i++) {
+    if (isChangingOption) {
+      options = { ...defaultOptions, ..._options };
+      isChangingOption = false;
+    }
+    if (colorLines != null) {
+      const cc = getCharFromLines(colorLines, lx, ly);
+      if (cc != null && isColorChars(cc)) {
+        options.color = cc;
+        isChangingOption = true;
+      }
+    }
+    if (backgroundColorLines != null) {
+      const bc = getCharFromLines(backgroundColorLines, lx, ly);
+      if (bc != null && isColorChars(bc)) {
+        options.backgroundColor = bc;
+        isChangingOption = true;
+      }
+    }
+    if (rotationLines != null) {
+      const rc = getCharFromLines(rotationLines, lx, ly);
+      if (rc != null) {
+        const ri = rotationChars.indexOf(rc);
+        if (ri >= 0) {
+          options.angleIndex = ri % 4;
+          options.isMirrorX = Math.floor(ri / 4) % 2 === 1;
+          options.isMirrorY = Math.floor(ri / 4) >= 2;
+          isChangingOption = true;
+        }
+      }
+    }
     const r = printChar(str[i], x, y, options);
     if (r === "cr") {
       x = bx;
       y += options.scale;
+      lx = 0;
+      ly++;
     } else {
       x += options.scale;
+      lx++;
     }
   }
+}
+
+function getCharFromLines(lines: string[], x: number, y: number) {
+  if (y >= lines.length) {
+    return undefined;
+  }
+  const c = lines[y].charAt(x);
+  return c === "" || c === " " ? undefined : c;
 }
 
 export type PrintCharResult = "char" | "space" | "cr";
@@ -82,7 +150,7 @@ export function printChar(
   }
   const x = Math.floor(_x);
   const y = Math.floor(_y);
-  if (x < 0 || x >= 16 || y < 0 || y >= 16) {
+  if (x < 0 || x + options.scale > 16 || y < 0 || y + options.scale > 16) {
     return "char";
   }
   const cc = cca - 0x21;
