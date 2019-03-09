@@ -13,7 +13,8 @@
     "typescript": "^3.3.3333"
   },
   "dependencies": {
-    "gif-capture-canvas": "^1.0.1"
+    "gif-capture-canvas": "^1.0.1",
+    "tone": "^13.4.9"
   },
   "browserslist": [
     "last 1 Chrome version"

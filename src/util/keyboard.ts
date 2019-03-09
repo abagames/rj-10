@@ -1,6 +1,5 @@
 import { Vector } from "./vector";
 import { range, wrap } from "./math";
-//import * as sound from "./sound";
 
 export let isPressed = false;
 export let isJustPressed = false;
@@ -11,7 +10,8 @@ export const isStickJustPressed = range(4).map(() => false);
 
 let options = {
   isUsingStickKeysAsButton: false,
-  isFourWaysStick: false
+  isFourWaysStick: false,
+  onKeyDown: undefined as Function
 };
 let isInitialized = false;
 
@@ -45,6 +45,7 @@ const buttonKeys = [
 export function init(_options?: {
   isUsingStickKeysAsButton?: boolean;
   isFourWaysStick?: boolean;
+  onKeyDown?: Function;
 }) {
   options = { ...options, ..._options };
   if (isInitialized) {
@@ -52,7 +53,9 @@ export function init(_options?: {
   }
   document.addEventListener("keydown", e => {
     isKeyPressing[e.keyCode] = isKeyPressed[e.keyCode] = true;
-    //sound.resumeAudioContext();
+    if (options.onKeyDown != null) {
+      options.onKeyDown();
+    }
   });
   document.addEventListener("keyup", e => {
     isKeyPressing[e.keyCode] = false;

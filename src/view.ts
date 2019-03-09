@@ -7,24 +7,14 @@ export const size = 216;
 export let fxCanvas;
 export let canvas: HTMLCanvasElement;
 export let context: CanvasRenderingContext2D;
+
+const isCapturing = false;
 let captureCanvas: HTMLCanvasElement;
 let captureContext: CanvasRenderingContext2D;
-
-let updateFunc: Function;
 let texture;
-let isCapturing = false;
+let ticks = 0;
 
-export function init(
-  _initFunc: Function,
-  _updateFunc: Function,
-  _isCapturing: boolean
-) {
-  updateFunc = _updateFunc;
-  isCapturing = _isCapturing;
-  if (context != null) {
-    _initFunc();
-    return;
-  }
+export function init() {
   fxCanvas = fx.canvas();
   fxCanvas.colorShift = fx.wrap(colorShift);
   fxCanvas.scanlines = fx.wrap(scanlines);
@@ -43,23 +33,14 @@ export function init(
     captureContext.fillStyle = "black";
     gcc.setOptions({ scale: 1, capturingFps: 30 });
   }
-  _initFunc();
-  update();
 }
 
-let lastFrameTime = 0;
-let ticks = 0;
-
-function update() {
-  requestAnimationFrame(update);
-  const now = window.performance.now();
-  const timeSinceLast = now - lastFrameTime;
-  if (timeSinceLast < 1000 / 60 - 5) {
-    return;
-  }
+export function clear() {
   context.fillStyle = "black";
   context.fillRect(0, 0, size, size);
-  updateFunc();
+}
+
+export function update() {
   texture.loadContentsOf(canvas);
   fxCanvas
     .draw(texture)
@@ -74,5 +55,4 @@ function update() {
     gcc.capture(captureCanvas);
   }
   ticks++;
-  lastFrameTime = now;
 }
