@@ -15,9 +15,6 @@ function getSynthParams(type: string) {
   return {
     oscillator: {
       type
-    },
-    envelope: {
-      release: 0.07
     }
   };
 }
