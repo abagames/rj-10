@@ -224,38 +224,41 @@ export function update() {
       if (c == null) {
         continue;
       }
-      let options: PrintCharOptions = {
-        color: "w",
-        backgroundColor: "l",
-        angleIndex: 0,
-        isMirrorX: false,
-        isMirrorY: false,
-        scale: 1
-      };
       const cg = colorGrid[x][y];
       const bg = backgroundColorGrid[x][y];
       const rg = rotationGrid[x][y];
-      if (cg == null && bg == null && rg == null) {
-        printChar(c, x, y, options);
-        continue;
-      }
-      if (cg != null && isColorChars(cg)) {
-        options.color = cg;
-      }
-      if (bg != null && isColorChars(bg)) {
-        options.backgroundColor = bg;
-      }
-      if (rg != null) {
-        const ri = rotationChars.indexOf(rg);
-        if (ri >= 0) {
-          options.angleIndex = ri % 4;
-          options.isMirrorX = Math.floor(ri / 4) % 2 === 1;
-          options.isMirrorY = Math.floor(ri / 4) >= 2;
-        }
-      }
-      printChar(c, x, y, options);
+      printChar(c, x, y, getCharOption(cg, bg, rg));
     }
   }
+}
+
+export function getCharOption(cg: string, bg: string, rg: string) {
+  let options: PrintCharOptions = {
+    color: "w",
+    backgroundColor: "l",
+    angleIndex: 0,
+    isMirrorX: false,
+    isMirrorY: false,
+    scale: 1
+  };
+  if (cg == null && bg == null && rg == null) {
+    return options;
+  }
+  if (cg != null && isColorChars(cg)) {
+    options.color = cg;
+  }
+  if (bg != null && isColorChars(bg)) {
+    options.backgroundColor = bg;
+  }
+  if (rg != null) {
+    const ri = rotationChars.indexOf(rg);
+    if (ri >= 0) {
+      options.angleIndex = ri % 4;
+      options.isMirrorX = Math.floor(ri / 4) % 2 === 1;
+      options.isMirrorY = Math.floor(ri / 4) >= 2;
+    }
+  }
+  return options;
 }
 
 export function clear() {
