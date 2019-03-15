@@ -36,5 +36,7 @@ function update() {
   keyboard.update();
   pointer.update();
   updateFunc();
+  view.clear();
+  terminal.update();
   view.update();
 }
