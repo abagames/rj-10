@@ -26,12 +26,16 @@ const letterSize = dotCount * dotSize;
 let letterImages: HTMLImageElement[];
 let letterCanvas: HTMLCanvasElement;
 let letterContext: CanvasRenderingContext2D;
-const charGrid = range(size).map(() => range(size).map(() => undefined));
-const colorGrid = range(size).map(() => range(size).map(() => undefined));
-const backgroundColorGrid = range(size).map(() =>
+export const charGrid = range(size).map(() => range(size).map(() => undefined));
+export const colorGrid = range(size).map(() =>
   range(size).map(() => undefined)
 );
-const rotationGrid = range(size).map(() => range(size).map(() => undefined));
+export const backgroundColorGrid = range(size).map(() =>
+  range(size).map(() => undefined)
+);
+export const rotationGrid = range(size).map(() =>
+  range(size).map(() => undefined)
+);
 
 export function init() {
   letterCanvas = document.createElement("canvas");
@@ -232,6 +236,33 @@ export function update() {
   }
 }
 
+export function getCharAt(x: number, y: number) {
+  const char = charGrid[x][y];
+  const cg = colorGrid[x][y];
+  const bg = backgroundColorGrid[x][y];
+  const rg = rotationGrid[x][y];
+  return { char, options: getCharOption(cg, bg, rg) };
+}
+
+export function setCharAt(
+  x: number,
+  y: number,
+  char: string,
+  options: PrintCharOptions
+) {
+  charGrid[x][y] = char;
+  colorGrid[x][y] = options.color;
+  backgroundColorGrid[x][y] = options.backgroundColor;
+  let ri = options.angleIndex;
+  if (options.isMirrorX) {
+    ri |= 4;
+  }
+  if (options.isMirrorY) {
+    ri |= 8;
+  }
+  rotationGrid[x][y] = rotationChars.charAt(ri);
+}
+
 export function getCharOption(cg: string, bg: string, rg: string) {
   let options: PrintCharOptions = {
     color: "w",
@@ -254,8 +285,8 @@ export function getCharOption(cg: string, bg: string, rg: string) {
     const ri = rotationChars.indexOf(rg);
     if (ri >= 0) {
       options.angleIndex = ri % 4;
-      options.isMirrorX = Math.floor(ri / 4) % 2 === 1;
-      options.isMirrorY = Math.floor(ri / 4) >= 2;
+      options.isMirrorX = (ri & 4) > 0;
+      options.isMirrorY = (ri & 8) > 0;
     }
   }
   return options;
