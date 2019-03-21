@@ -453,201 +453,186 @@ wwwww
 `,
   // a
   `
-  w
- www
-w w w
-  w
-  w
-`,
-  `
-wwwwww
-wwwwww
-wwwww
-wwwww
-wwww
-ww
-`,
-  `
  ww
-wwww
-wwww
- ww
-`,
-  `
-www
-www
-www
-
-
-
-`,
-  `
-  w
-  w
-  w
-  w
-  w
-  w  
-`,
-  `
-wwwwww
-wwwwww
-wwwwww
-
-
-
-`,
-  `
-www
-www
-www
-   www
-   www
-   www
-`,
-  `
-wwww
-w  w
-w  w
-wwww
-`,
-  `
-  w
- w w
- w w
-w   w
-wwwww
-`,
-  `
-  w
-  w
-www
-
-
-
-`,
-  `
-  w
-  w
-wwwwww
-
-
-
-`,
-  `
-  w
-  w
-wwwwwww
-  w
-  w
-  w
-`,
-  `
-  w
-  w
-ww
-
-
-
-`,
-  `
- ww
-w  w
-w  w
- ww
-`,
-  `
-  w
- w
-w
-
-
-
-`,
-  `
-     w
-    w
    w
+ www
+w  w
+ ww
+`,
+  `
+w
+w
+www
+w  w
+www
+`,
+  `
+
+ ww
+w  
+w
+ ww
+`,
+  `
+   w
+   w
+ www
+w  w
+ www
+`,
+  `
+ ww
+w  w
+www
+w
+ ww
+`,
+  `
+   w
+  w 
+ www
   w
+  w
+`,
+  `
+ www
+w  w
+ www
+   w
+ ww
+`,
+  `
+w
+w
+www
+w  w
+w  w
+`,
+  `
+  w
+
+  w
+  w
+  w
+`,
+  `
+   w
+
+   w
+   w
+ ww
+`,
+  `
+w
+w
+w w
+ww
+w w
+`,
+  `
+ ww
+  w
+  w
+  w
+ www
+`,
+  `
+
+ww w
+w w w
+w w w
+w w w
+`,
+  `
+
+w ww
+ww  w
+w   w
+w   w
+`,
+  `
+
+ ww
+w  w
+w  w
+ ww
+`,
+  `
+
+www
+w  w
+www
+w
+`,
+  `
+
+ www
+w  w
+ www
+   w
+`,
+  `
+
+w ww
+ww
+w
+w
+`,
+  `
+ ww
+w
+ ww  
+   w
+ ww
+`,
+  `
+ w
+www
+ w
+ w
+  w
+`,
+  `
+
+w  w
+w  w
+w  w
+ ww
+`,
+  `
+
+w  w
+w  w
+ ww
+ ww
+`,
+  `
+
+w w w
+w w w
+w w w
+ w w
+`,
+  `
+
+w  w
+ ww
+ ww
+w  w
+`,
+  `
+
+w  w
+ ww
  w
 w
 `,
   `
-  ww
-  ww
-wwwwww
-  ww
- w  w
-w    w
-`,
-  `
- wwww
-w    w
-ww  ww
-w    w
-w ww w
- wwww 
-`,
-  `
+
 wwww
-wwww
-wwww
-wwww
-`,
-  `
   w
- www
- www
-wwwww
-wwwww
-`,
-  `
-wwwwww
-wwwww
+ w
 wwww
-www
-ww
-w
-`,
-  `
-www
-www
-ww
-
-
-
-`,
-  `
-w w w
- w w w
-w w w
- w w w
-w w w
- w w w
-`,
-  `
-w    w
- w  w
-  ww
-  ww
- w  w
-w    w
-`,
-  `
-www
-ww
-w
-
-
-
-`,
-  `
-     w
-     w
-    w
-    w
-  ww
-ww
 `,
   //{
   `

@@ -4,13 +4,18 @@ import * as keyboard from "../util/keyboard";
 import * as sound from "../sound";
 
 function init() {
+  terminal.clear();
   terminal.print(
     `
 ########
 #      #
 #      #
-#  a   #
+#  ^   #
 ########
+abcdefghijklmn
+opqrstuvwxyz
+ABCDEFGHIJKLMN
+OPQRSTUVWXYZ
 `,
     0,
     -1
