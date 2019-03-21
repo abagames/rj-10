@@ -1,26 +1,22 @@
 import * as terminal from "../terminal";
-import * as view from "../view";
+import * as main from "../main";
+import * as keyboard from "../util/keyboard";
+import * as sound from "../sound";
 
-function init() {}
-
-function update() {
+function init() {
   terminal.print(
     `
-!@#$%^&*()_+
-1234567890-=
-QWERTYUIOP[]\\
-ASDFGHJKL;'
-ZXCVBNM,./
-:"<>? \`{|}~
-tyuiop
-sdfghjkle
-cvbnmz
-aqrwx
-  `,
+########
+#      #
+#      #
+#  a   #
+########
+`,
     0,
-    0
+    -1
   );
 }
 
-terminal.init();
-view.init(init, update, false);
+function update() {}
+
+main.init(init, update);

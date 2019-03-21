@@ -4,13 +4,10 @@ import * as terminal from "./terminal";
 
 export class Actor extends sga.Actor {
   pos = new Vector();
-  str = "";
-  color = "w";
+  char = "";
+  options = undefined as terminal.CharOptions;
 
-  update() {
-    super.update();
-    if (this.isAlive) {
-      terminal.print(this.str, this.pos.x, this.pos.y, this.color);
-    }
+  draw() {
+    terminal.setCharAt(this.pos.x, this.pos.y, this.char, this.options);
   }
 }

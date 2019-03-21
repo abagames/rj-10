@@ -19,23 +19,19 @@ const rgbObjects = rgbNumbers.map(n => {
     b: n & 0xff
   };
 });
-const size = 16;
+export const size = 16;
 const dotCount = 6;
 const dotSize = 2;
 const letterSize = dotCount * dotSize;
 let letterImages: HTMLImageElement[];
 let letterCanvas: HTMLCanvasElement;
 let letterContext: CanvasRenderingContext2D;
-export const charGrid = range(size).map(() => range(size).map(() => undefined));
-export const colorGrid = range(size).map(() =>
+let charGrid = range(size).map(() => range(size).map(() => undefined));
+let colorGrid = range(size).map(() => range(size).map(() => undefined));
+let backgroundColorGrid = range(size).map(() =>
   range(size).map(() => undefined)
 );
-export const backgroundColorGrid = range(size).map(() =>
-  range(size).map(() => undefined)
-);
-export const rotationGrid = range(size).map(() =>
-  range(size).map(() => undefined)
-);
+let rotationGrid = range(size).map(() => range(size).map(() => undefined));
 
 export function init() {
   letterCanvas = document.createElement("canvas");
@@ -59,18 +55,21 @@ export type Options = {
   rotationPattern?: string;
 };
 
-export function print(str: string, x: number, y: number, options?: Options) {
+export function print(
+  str: string,
+  x: number,
+  y: number,
+  options: Options = {}
+) {
   const bx = x;
   const colorLines =
-    options != null && options.colorPattern != null
-      ? options.colorPattern.split("\n")
-      : undefined;
+    options.colorPattern != null ? options.colorPattern.split("\n") : undefined;
   const backgroundColorLines =
-    options != null && options.backgroundColorPattern != null
+    options.backgroundColorPattern != null
       ? options.backgroundColorPattern.split("\n")
       : undefined;
   const rotationLines =
-    options != null && options.rotationPattern != null
+    options.rotationPattern != null
       ? options.rotationPattern.split("\n")
       : undefined;
   let lx = 0;
@@ -109,7 +108,15 @@ function getCharFromLines(lines: string[], x: number, y: number) {
   return c === "" || c === " " ? undefined : c;
 }
 
-export type PrintCharOptions = {
+export function getCharAt(x: number, y: number) {
+  const char = charGrid[x][y];
+  const cg = colorGrid[x][y];
+  const bg = backgroundColorGrid[x][y];
+  const rg = rotationGrid[x][y];
+  return { char, options: getCharOption(cg, bg, rg) };
+}
+
+export type CharOptions = {
   color?: ColorChar;
   backgroundColor?: ColorChar;
   angleIndex?: number;
@@ -118,18 +125,107 @@ export type PrintCharOptions = {
   scale?: number;
 };
 
-export function printChar(
-  c: string,
-  _x: number,
-  _y: number,
-  options: PrintCharOptions
+export function setCharAt(
+  x: number,
+  y: number,
+  char: string,
+  options?: CharOptions
 ) {
+  charGrid[x][y] = char;
+  if (options == null) {
+    colorGrid[x][y] = backgroundColorGrid[x][y] = rotationGrid[x][
+      y
+    ] = undefined;
+    return;
+  }
+  colorGrid[x][y] = options.color;
+  backgroundColorGrid[x][y] = options.backgroundColor;
+  if (options.angleIndex == null) {
+    rotationGrid[x][y] = undefined;
+  } else {
+    let ri = options.angleIndex;
+    if (options.isMirrorX) {
+      ri |= 4;
+    }
+    if (options.isMirrorY) {
+      ri |= 8;
+    }
+    rotationGrid[x][y] = rotationChars.charAt(ri);
+  }
+}
+
+export function update() {
+  for (let x = 0; x < size; x++) {
+    for (let y = 0; y < size; y++) {
+      const c = charGrid[x][y];
+      if (c == null) {
+        continue;
+      }
+      const cg = colorGrid[x][y];
+      const bg = backgroundColorGrid[x][y];
+      const rg = rotationGrid[x][y];
+      printChar(c, x, y, getCharOption(cg, bg, rg));
+    }
+  }
+}
+
+export function getCharOption(cg: string, bg: string, rg: string) {
+  let options: CharOptions = {
+    color: "w",
+    backgroundColor: "l",
+    angleIndex: 0,
+    isMirrorX: false,
+    isMirrorY: false,
+    scale: 1
+  };
+  if (cg != null && isColorChars(cg)) {
+    options.color = cg;
+  }
+  if (bg != null && isColorChars(bg)) {
+    options.backgroundColor = bg;
+  }
+  if (rg != null) {
+    const ri = rotationChars.indexOf(rg);
+    if (ri >= 0) {
+      options.angleIndex = ri % 4;
+      options.isMirrorX = (ri & 4) > 0;
+      options.isMirrorY = (ri & 8) > 0;
+    }
+  }
+  return options;
+}
+
+export function clear() {
+  for (let x = 0; x < size; x++) {
+    for (let y = 0; y < size; y++) {
+      charGrid[x][y] = colorGrid[x][y] = backgroundColorGrid[x][
+        y
+      ] = rotationGrid[x][y] = undefined;
+    }
+  }
+}
+
+export function getState() {
+  return {
+    charGrid: charGrid.map(l => [].concat(l)),
+    colorGrid: colorGrid.map(l => [].concat(l)),
+    backgroundColorGrid: backgroundColorGrid.map(l => [].concat(l)),
+    rotationGrid: rotationGrid.map(l => [].concat(l))
+  };
+}
+
+export function setState(state) {
+  charGrid = state.charGrid.map(l => [].concat(l));
+  colorGrid = state.colorGrid.map(l => [].concat(l));
+  backgroundColorGrid = state.backgroundColorGrid.map(l => [].concat(l));
+  rotationGrid = state.rotationGrid.map(l => [].concat(l));
+}
+
+function printChar(c: string, x: number, y: number, options: CharOptions) {
   const cca = c.charCodeAt(0);
   if (cca < 0x20 || cca > 0x7e) {
     return;
   }
-  const x = Math.floor(_x);
-  const y = Math.floor(_y);
   if (x < 0 || x + options.scale > size || y < 0 || y + options.scale > size) {
     return;
   }
@@ -219,85 +315,4 @@ function createLetterImages(
   const img = document.createElement("img");
   img.src = letterCanvas.toDataURL();
   return img;
-}
-
-export function update() {
-  for (let x = 0; x < size; x++) {
-    for (let y = 0; y < size; y++) {
-      const c = charGrid[x][y];
-      if (c == null) {
-        continue;
-      }
-      const cg = colorGrid[x][y];
-      const bg = backgroundColorGrid[x][y];
-      const rg = rotationGrid[x][y];
-      printChar(c, x, y, getCharOption(cg, bg, rg));
-    }
-  }
-}
-
-export function getCharAt(x: number, y: number) {
-  const char = charGrid[x][y];
-  const cg = colorGrid[x][y];
-  const bg = backgroundColorGrid[x][y];
-  const rg = rotationGrid[x][y];
-  return { char, options: getCharOption(cg, bg, rg) };
-}
-
-export function setCharAt(
-  x: number,
-  y: number,
-  char: string,
-  options: PrintCharOptions
-) {
-  charGrid[x][y] = char;
-  colorGrid[x][y] = options.color;
-  backgroundColorGrid[x][y] = options.backgroundColor;
-  let ri = options.angleIndex;
-  if (options.isMirrorX) {
-    ri |= 4;
-  }
-  if (options.isMirrorY) {
-    ri |= 8;
-  }
-  rotationGrid[x][y] = rotationChars.charAt(ri);
-}
-
-export function getCharOption(cg: string, bg: string, rg: string) {
-  let options: PrintCharOptions = {
-    color: "w",
-    backgroundColor: "l",
-    angleIndex: 0,
-    isMirrorX: false,
-    isMirrorY: false,
-    scale: 1
-  };
-  if (cg == null && bg == null && rg == null) {
-    return options;
-  }
-  if (cg != null && isColorChars(cg)) {
-    options.color = cg;
-  }
-  if (bg != null && isColorChars(bg)) {
-    options.backgroundColor = bg;
-  }
-  if (rg != null) {
-    const ri = rotationChars.indexOf(rg);
-    if (ri >= 0) {
-      options.angleIndex = ri % 4;
-      options.isMirrorX = (ri & 4) > 0;
-      options.isMirrorY = (ri & 8) > 0;
-    }
-  }
-  return options;
-}
-
-export function clear() {
-  for (let x = 0; x < size; x++) {
-    for (let y = 0; y < size; y++) {
-      charGrid[x][y] = colorGrid[x][y] = backgroundColorGrid[x][
-        y
-      ] = rotationGrid[x][y] = undefined;
-    }
-  }
 }

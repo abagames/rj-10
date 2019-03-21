@@ -45,7 +45,7 @@ export function update() {
   fxCanvas
     .draw(texture)
     .colorShift()
-    .scanlines(ticks * canvas.height * 0.000005)
+    //.scanlines(ticks * canvas.height * 0.000005)
     .bulgePinch(canvas.width / 2, canvas.height / 2, canvas.width * 0.8, 0.1)
     .vignette(0.2, 0.5)
     .update();
