@@ -9,7 +9,6 @@ import * as automaton from "./automaton";
 import { Actor } from "./actor";
 
 let updateFunc: Function;
-let isInitialized = false;
 let lastFrameTime = 0;
 export let pointer: Pointer;
 
@@ -17,11 +16,6 @@ export function init(_initFunc: Function, _updateFunc: Function) {
   _initFunc();
   sga.reset();
   updateFunc = _updateFunc;
-  if (isInitialized) {
-    automaton.getActors();
-    return;
-  }
-  isInitialized = true;
   keyboard.init({ onKeyDown: sound.resumeAudioContext });
   initPointer(sound.resumeAudioContext);
   pointer = new Pointer(view.fxCanvas, new Vector(view.size, view.size));

@@ -12,10 +12,6 @@ function init() {
 #      #
 #  ^   #
 ########
-abcdefghijklmn
-opqrstuvwxyz
-ABCDEFGHIJKLMN
-OPQRSTUVWXYZ
 `,
     0,
     -1
