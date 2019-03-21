@@ -4,18 +4,20 @@ import * as keyboard from "../util/keyboard";
 import * as sound from "../sound";
 
 function init() {
-  terminal.clear();
-  terminal.print(
-    `
+  terminal.print("", 0, 0, {
+    charAndColorPattern: String.raw`
 ########
-#      #
-#      #
+
+#    Z #
+     c
+#    Z #
+     c
 #  ^   #
+   r
 ########
-`,
-    0,
-    -1
-  );
+
+`
+  });
 }
 
 function update() {}

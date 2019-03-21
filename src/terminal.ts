@@ -53,16 +53,17 @@ export type Options = {
   colorPattern?: string;
   backgroundColorPattern?: string;
   rotationPattern?: string;
+  charAndColorPattern?: string;
 };
 
 export function print(
-  str: string,
+  _str: string,
   x: number,
   y: number,
   options: Options = {}
 ) {
   const bx = x;
-  const colorLines =
+  let colorLines =
     options.colorPattern != null ? options.colorPattern.split("\n") : undefined;
   const backgroundColorLines =
     options.backgroundColorPattern != null
@@ -72,6 +73,12 @@ export function print(
     options.rotationPattern != null
       ? options.rotationPattern.split("\n")
       : undefined;
+  let str = _str;
+  if (options.charAndColorPattern != null) {
+    const cc = options.charAndColorPattern.split("\n");
+    str = cc.filter((l, i) => i % 2 === 1).join("\n");
+    colorLines = cc.filter((l, i) => i > 0 && i % 2 === 0);
+  }
   let lx = 0;
   let ly = 0;
   for (let i = 0; i < str.length; i++) {
