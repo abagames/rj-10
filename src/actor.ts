@@ -5,10 +5,12 @@ import { wrap } from "./util/math";
 
 export class Actor extends sga.Actor {
   pos = new Vector();
+  prevPos = new Vector();
   char = "";
   options = undefined as terminal.CharOptions;
 
   update() {
+    this.prevPos.set(this.pos);
     super.update();
     this.pos.x = wrap(this.pos.x, 0, terminal.size);
     this.pos.y = wrap(this.pos.y, 0, terminal.size);

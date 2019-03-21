@@ -1,4 +1,4 @@
-import { Vector } from "./vector";
+import { Vector, VectorLike } from "./vector";
 import { Random } from "./random";
 import { isInRange } from "./math";
 
@@ -71,7 +71,7 @@ export class Pointer {
     this.pressedPos.y += (this.pos.y - this.pressedPos.y) * ratio;
   }
 
-  setTargetPos(v: Vector) {
+  setTargetPos(v: VectorLike) {
     this.targetPos.set(v);
   }
 

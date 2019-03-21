@@ -23,7 +23,7 @@ export const size = 16;
 const dotCount = 6;
 const dotSize = 2;
 const letterSize = dotCount * dotSize;
-let letterImages: HTMLImageElement[];
+export let letterImages: HTMLImageElement[];
 let letterCanvas: HTMLCanvasElement;
 let letterContext: CanvasRenderingContext2D;
 let charGrid = range(size).map(() => range(size).map(() => undefined));

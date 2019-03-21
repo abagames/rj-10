@@ -1,13 +1,16 @@
 import * as terminal from "./terminal";
 import { Actor } from "./actor";
 import * as sga from "./util/simpleGameActor";
-import { Vector } from "./util/vector";
 import { wrap } from "./util/math";
+import { stickAngle } from "./main";
 
 let background;
 
-const arrowChars = "^Z>nvz<N";
-const actorTypes = [{ chars: arrowChars, func: arrow, interval: 1 }];
+const arrowChars = ">nvz<N^Z";
+const actorTypes = [
+  { chars: arrowChars, func: arrow, interval: 2 },
+  { chars: "@", func: operated, interval: 1 }
+];
 
 export function getActors() {
   for (let x = 0; x < terminal.size; x++) {
@@ -38,26 +41,25 @@ export function update() {
   });
 }
 
+const angleOffsets = [
+  [1, 0],
+  [1, 1],
+  [0, 1],
+  [-1, 1],
+  [-1, 0],
+  [-1, -1],
+  [0, -1],
+  [1, -1]
+];
+
 function arrow(a: Actor, interval: number) {
-  const angleOffsets = [
-    [0, -1],
-    [1, -1],
-    [1, 0],
-    [1, 1],
-    [0, 1],
-    [-1, 1],
-    [-1, 0],
-    [-1, -1]
-  ];
-  const reflectSlash = [2, 0, -2, 4, 2, 0, -2, 4];
-  const reflectBackSlash = [-2, 4, 2, 0, -2, 4, 2, 0];
-  const reflectHorizontal = [4, 2, 0, -2, 4, 2, 0, -2];
-  const reflectVertical = [0, -2, 4, 2, 0, -2, 4, 2];
-  const pp = new Vector();
+  const reflectSlash = [-2, 4, 2, 0, -2, 4, 2, 0];
+  const reflectBackSlash = [2, 0, -2, 4, 2, 0, -2, 4];
+  const reflectHorizontal = [0, -2, 4, 2, 0, -2, 4, 2];
+  const reflectVertical = [4, 2, 0, -2, 4, 2, 0, -2];
   a.addUpdater(() => {
     let ai = arrowChars.indexOf(a.char);
     const o = angleOffsets[ai];
-    pp.set(a.pos);
     a.pos.add({ x: o[0], y: o[1] });
     const c = terminal.getCharAt(a.pos.x, a.pos.y).char;
     if (!isSpaceChar(c)) {
@@ -67,10 +69,14 @@ function arrow(a: Actor, interval: number) {
         ai += reflectBackSlash[ai];
       } else if (ai % 2 === 0) {
         ai += 4;
-        a.pos.set(pp);
+        a.pos.set(a.prevPos);
       } else {
-        const sx = isSpaceChar(terminal.getCharAt(pp.x + o[0], pp.y).char);
-        const sy = isSpaceChar(terminal.getCharAt(pp.x, pp.y + o[1]).char);
+        const sx = isSpaceChar(
+          terminal.getCharAt(a.prevPos.x + o[0], a.prevPos.y).char
+        );
+        const sy = isSpaceChar(
+          terminal.getCharAt(a.prevPos.x, a.prevPos.y + o[1]).char
+        );
         if (sx && !sy) {
           ai += reflectHorizontal[ai];
         } else if (!sx && sy) {
@@ -78,10 +84,36 @@ function arrow(a: Actor, interval: number) {
         } else {
           ai += 4;
         }
-        a.pos.set(pp);
+        a.pos.set(a.prevPos);
       }
       ai = wrap(ai, 0, 8);
       a.char = arrowChars.charAt(ai);
+    }
+  }, interval);
+}
+
+function operated(a: Actor, interval: number) {
+  a.addUpdater(() => {
+    if (stickAngle === 0) {
+      return;
+    }
+    const o = angleOffsets[stickAngle - 1];
+    a.pos.add({ x: o[0], y: o[1] });
+    if (isSpaceChar(terminal.getCharAt(a.pos.x, a.pos.y).char)) {
+      return;
+    }
+    const sx = isSpaceChar(
+      terminal.getCharAt(a.prevPos.x + o[0], a.prevPos.y).char
+    );
+    const sy = isSpaceChar(
+      terminal.getCharAt(a.prevPos.x, a.prevPos.y + o[1]).char
+    );
+    if (sx && !sy) {
+      a.pos.y = a.prevPos.y;
+    } else if (!sx && sy) {
+      a.pos.x = a.prevPos.x;
+    } else {
+      a.pos.set(a.prevPos);
     }
   }, interval);
 }
