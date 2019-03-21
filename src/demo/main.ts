@@ -8,12 +8,14 @@ function init() {
     charAndColorPattern: String.raw`
 ########
 
-#    Z #
+#  / Z\#
      c
 #    Z #
      c
 #  ^   #
    r
+#      #
+
 ########
 
 `

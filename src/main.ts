@@ -14,7 +14,6 @@ export let pointer: Pointer;
 
 export function init(_initFunc: Function, _updateFunc: Function) {
   _initFunc();
-  sga.reset();
   updateFunc = _updateFunc;
   keyboard.init({ onKeyDown: sound.resumeAudioContext });
   initPointer(sound.resumeAudioContext);
