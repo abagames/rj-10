@@ -16,7 +16,11 @@ export function getActors() {
   for (let x = 0; x < terminal.size; x++) {
     for (let y = 0; y < terminal.size; y++) {
       const tc = terminal.getCharAt(x, y);
-      if (tc.char != null) {
+      if (
+        tc.char != null &&
+        tc.options.color != null &&
+        tc.options.color != "w"
+      ) {
         actorTypes.forEach(t => {
           if (!t.chars.includes(tc.char)) {
             return;
