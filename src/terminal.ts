@@ -32,6 +32,9 @@ let backgroundColorGrid = range(size).map(() =>
   range(size).map(() => undefined)
 );
 let rotationGrid = range(size).map(() => range(size).map(() => undefined));
+const colorChars = "lrgybpcw";
+type ColorChar = "l" | "r" | "g" | "y" | "b" | "p" | "c" | "w";
+const rotationChars = "kljhnmbvopiu9087";
 
 export function init() {
   letterCanvas = document.createElement("canvas");
@@ -40,14 +43,9 @@ export function init() {
   letterImages = letterPatterns.map(lp => createLetterImages(lp));
 }
 
-const colorChars = "lrgybpcw";
-type ColorChar = "l" | "r" | "g" | "y" | "b" | "p" | "c" | "w";
-
-function isColorChars(c: string): c is ColorChar {
-  return colorChars.indexOf(c) >= 0;
+export function printWithColor(str: string) {
+  print("", 0, 0, { charAndColorPattern: str });
 }
-
-const rotationChars = "kljhnmbvopiu9087";
 
 export type Options = {
   colorPattern?: string;
@@ -322,4 +320,8 @@ function createLetterImages(
   const img = document.createElement("img");
   img.src = letterCanvas.toDataURL();
   return img;
+}
+
+function isColorChars(c: string): c is ColorChar {
+  return colorChars.indexOf(c) >= 0;
 }

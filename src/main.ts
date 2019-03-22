@@ -9,29 +9,9 @@ import * as automaton from "./automaton";
 import { Actor } from "./actor";
 import { wrap } from "./util/math";
 
-let updateFunc: Function;
-let lastFrameTime = 0;
 export let pointer: Pointer;
-
-export function init(_initFunc: Function, _updateFunc: Function) {
-  _initFunc();
-  updateFunc = _updateFunc;
-  keyboard.init({ onKeyDown: sound.resumeAudioContext });
-  initPointer(sound.resumeAudioContext);
-  view.init();
-  pointer = new Pointer(
-    view.fxCanvas,
-    new Vector(view.size, view.size),
-    false,
-    new Vector(0.5, 0.5)
-  );
-  terminal.init();
-  sga.setActorClass(Actor);
-  automaton.getActors();
-  update();
-}
-
 export let stickAngle = 0;
+let lastFrameTime = 0;
 let isPrevStickPressed = false;
 const centerPos = new Vector(view.size / 2, view.size / 2);
 let offsetFromCenter = new Vector();
@@ -39,6 +19,23 @@ let pointerAngle = 0;
 const cursorChars = "+>nvz<N^Z";
 const interval = 15;
 let ticks = 0;
+
+export function init(str: string) {
+  view.init();
+  keyboard.init({ onKeyDown: sound.resumeAudioContext });
+  initPointer(sound.resumeAudioContext);
+  pointer = new Pointer(
+    view.fxCanvas,
+    new Vector(view.size, view.size),
+    false,
+    new Vector(0.5, 0.5)
+  );
+  terminal.init();
+  terminal.printWithColor(str);
+  sga.setActorClass(Actor);
+  automaton.getActors();
+  update();
+}
 
 function update() {
   requestAnimationFrame(update);
@@ -76,7 +73,6 @@ function update() {
       }
     }
     view.clear();
-    updateFunc();
     automaton.update();
     terminal.update();
     if (pointer.isPressed) {
