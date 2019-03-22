@@ -19,7 +19,8 @@ export function getActors() {
       if (
         tc.char != null &&
         tc.options.color != null &&
-        tc.options.color != "w"
+        tc.options.color != "w" &&
+        tc.options.color != "l"
       ) {
         let isSpawning = false;
         let a: Actor;
