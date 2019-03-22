@@ -1,9 +1,10 @@
 import * as fx from "./glfx/";
 import colorShift from "./glfx/shader/colorshift";
-import scanlines from "./glfx/shader/scanlines";
+//import scanlines from "./glfx/shader/scanlines";
 import * as gcc from "gif-capture-canvas";
+import { Vector, VectorLike } from "./util/vector";
 
-export const size = 216;
+export const size = new Vector(216, 216);
 export let fxCanvas;
 export let canvas: HTMLCanvasElement;
 export let context: CanvasRenderingContext2D;
@@ -14,21 +15,33 @@ let captureContext: CanvasRenderingContext2D;
 let texture;
 let ticks = 0;
 
-export function init() {
+export function init(_size: VectorLike = undefined) {
+  if (_size != null) {
+    size.set(_size);
+  }
   fxCanvas = fx.canvas();
   fxCanvas.colorShift = fx.wrap(colorShift);
-  fxCanvas.scanlines = fx.wrap(scanlines);
+  //fxCanvas.scanlines = fx.wrap(scanlines);
   fxCanvas.classList.add("centering");
+  if (size.x > size.y) {
+    fxCanvas.style.width = "95vmin";
+    fxCanvas.style.height = `${(95 * size.y) / size.x}vmin`;
+  } else {
+    fxCanvas.style.width = `${(95 * size.x) / size.y}vmin`;
+    fxCanvas.style.height = "95vmin";
+  }
   canvas = document.createElement("canvas");
-  canvas.width = canvas.height = size;
+  canvas.width = size.x;
+  canvas.height = size.y;
   context = canvas.getContext("2d");
   context.imageSmoothingEnabled = false;
   texture = fxCanvas.texture(canvas);
   document.body.appendChild(fxCanvas);
   if (isCapturing) {
     captureCanvas = document.createElement("canvas");
-    captureCanvas.width = size * 2;
-    captureCanvas.height = size;
+    const cw = size.y * 2;
+    captureCanvas.width = size.x > cw ? size.x : cw;
+    captureCanvas.height = size.y;
     captureContext = captureCanvas.getContext("2d");
     captureContext.fillStyle = "black";
     gcc.setOptions({ scale: 1, capturingFps: 30 });
@@ -37,7 +50,7 @@ export function init() {
 
 export function clear() {
   context.fillStyle = "black";
-  context.fillRect(0, 0, size, size);
+  context.fillRect(0, 0, size.x, size.y);
 }
 
 export function update() {
@@ -50,8 +63,12 @@ export function update() {
     .vignette(0.2, 0.5)
     .update();
   if (isCapturing) {
-    captureContext.fillRect(0, 0, size * 2, size);
-    captureContext.drawImage(fxCanvas, size / 2, 0);
+    captureContext.fillRect(0, 0, captureCanvas.width, captureCanvas.height);
+    captureContext.drawImage(
+      fxCanvas,
+      (captureCanvas.width - canvas.width) / 2,
+      0
+    );
     gcc.capture(captureCanvas);
   }
   ticks++;

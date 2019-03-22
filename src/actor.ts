@@ -13,8 +13,8 @@ export class Actor extends sga.Actor {
   update() {
     this.prevPos.set(this.pos);
     super.update();
-    this.pos.x = wrap(this.pos.x, 0, terminal.size);
-    this.pos.y = wrap(this.pos.y, 0, terminal.size);
+    this.pos.x = wrap(this.pos.x, 0, terminal.size.x);
+    this.pos.y = wrap(this.pos.y, 0, terminal.size.y);
     this.intPos.set(Math.floor(this.pos.x), Math.floor(this.pos.y));
     if (this.options.color === "c") {
       this.handlePlayer();

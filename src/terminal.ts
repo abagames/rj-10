@@ -1,6 +1,7 @@
 import { letterPatterns } from "./util/letterPattern";
 import * as view from "./view";
-import { range } from "./util/math";
+import { range, wrap } from "./util/math";
+import { Vector, VectorLike } from "./util/vector";
 
 const rgbNumbers = [
   0x000000,
@@ -19,24 +20,31 @@ const rgbObjects = rgbNumbers.map(n => {
     b: n & 0xff
   };
 });
-export const size = 16;
-const dotCount = 6;
-const dotSize = 2;
-const letterSize = dotCount * dotSize;
+export let size = new Vector(16, 16);
 export let letterImages: HTMLImageElement[];
 let letterCanvas: HTMLCanvasElement;
 let letterContext: CanvasRenderingContext2D;
-let charGrid = range(size).map(() => range(size).map(() => undefined));
-let colorGrid = range(size).map(() => range(size).map(() => undefined));
-let backgroundColorGrid = range(size).map(() =>
-  range(size).map(() => undefined)
-);
-let rotationGrid = range(size).map(() => range(size).map(() => undefined));
+let charGrid: string[][];
+let colorGrid: string[][];
+let backgroundColorGrid: string[][];
+let rotationGrid: string[][];
 const colorChars = "lrgybpcw";
 type ColorChar = "l" | "r" | "g" | "y" | "b" | "p" | "c" | "w";
 const rotationChars = "kljhnmbvopiu9087";
+const dotCount = 6;
+const dotSize = 2;
+const letterSize = dotCount * dotSize;
 
-export function init() {
+export function init(_size: VectorLike = undefined) {
+  if (_size != null) {
+    size.set(_size);
+  }
+  charGrid = range(size.x).map(() => range(size.y).map(() => undefined));
+  colorGrid = range(size.x).map(() => range(size.y).map(() => undefined));
+  backgroundColorGrid = range(size.x).map(() =>
+    range(size.y).map(() => undefined)
+  );
+  rotationGrid = range(size.x).map(() => range(size.y).map(() => undefined));
   letterCanvas = document.createElement("canvas");
   letterCanvas.width = letterCanvas.height = letterSize;
   letterContext = letterCanvas.getContext("2d");
@@ -88,7 +96,7 @@ export function print(
       ly++;
       continue;
     }
-    if (x < 0 || x >= size || y < 0 || y >= size) {
+    if (x < 0 || x >= size.x || y < 0 || y >= size.y) {
       x++;
       lx++;
       continue;
@@ -113,7 +121,9 @@ function getCharFromLines(lines: string[], x: number, y: number) {
   return c === "" || c === " " ? undefined : c;
 }
 
-export function getCharAt(x: number, y: number) {
+export function getCharAt(_x: number, _y: number) {
+  const x = wrap(_x, 0, size.x);
+  const y = wrap(_y, 0, size.y);
   const char = charGrid[x][y];
   const cg = colorGrid[x][y];
   const bg = backgroundColorGrid[x][y];
@@ -160,8 +170,8 @@ export function setCharAt(
 }
 
 export function update() {
-  for (let x = 0; x < size; x++) {
-    for (let y = 0; y < size; y++) {
+  for (let x = 0; x < size.x; x++) {
+    for (let y = 0; y < size.y; y++) {
       const c = charGrid[x][y];
       if (c == null) {
         continue;
@@ -201,8 +211,8 @@ export function getCharOption(cg: string, bg: string, rg: string) {
 }
 
 export function clear() {
-  for (let x = 0; x < size; x++) {
-    for (let y = 0; y < size; y++) {
+  for (let x = 0; x < size.x; x++) {
+    for (let y = 0; y < size.y; y++) {
       charGrid[x][y] = colorGrid[x][y] = backgroundColorGrid[x][
         y
       ] = rotationGrid[x][y] = undefined;
@@ -231,7 +241,12 @@ function printChar(c: string, x: number, y: number, options: CharOptions) {
   if (cca < 0x20 || cca > 0x7e) {
     return;
   }
-  if (x < 0 || x + options.scale > size || y < 0 || y + options.scale > size) {
+  if (
+    x < 0 ||
+    x + options.scale > size.x ||
+    y < 0 ||
+    y + options.scale > size.y
+  ) {
     return;
   }
   const ix = (x + 1) * letterSize;

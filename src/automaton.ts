@@ -13,8 +13,8 @@ const actorTypes = [
 ];
 
 export function getActors() {
-  for (let x = 0; x < terminal.size; x++) {
-    for (let y = 0; y < terminal.size; y++) {
+  for (let x = 0; x < terminal.size.x; x++) {
+    for (let y = 0; y < terminal.size.y; y++) {
       const tc = terminal.getCharAt(x, y);
       if (
         tc.char != null &&

@@ -13,7 +13,7 @@ export let pointer: Pointer;
 export let stickAngle = 0;
 let lastFrameTime = 0;
 let isPrevStickPressed = false;
-const centerPos = new Vector(view.size / 2, view.size / 2);
+let centerPos: Vector;
 let offsetFromCenter = new Vector();
 let pointerAngle = 0;
 const cursorChars = "+>nvz<N^Z";
@@ -21,16 +21,16 @@ const interval = 15;
 let ticks = 0;
 
 export function init(str: string) {
-  view.init();
+  const sl = str.split("\n");
+  const sx = Math.max(...sl.map(l => l.length));
+  const sy = (sl.length - 2) / 2;
+  const size = new Vector(sx, sy);
+  view.init({ x: (size.x + 2) * 6 * 2, y: (size.y + 2) * 6 * 2 });
+  centerPos = new Vector(view.size.x / 2, view.size.y / 2);
   keyboard.init({ onKeyDown: sound.resumeAudioContext });
   initPointer(sound.resumeAudioContext);
-  pointer = new Pointer(
-    view.fxCanvas,
-    new Vector(view.size, view.size),
-    false,
-    new Vector(0.5, 0.5)
-  );
-  terminal.init();
+  pointer = new Pointer(view.fxCanvas, view.size, false, new Vector(0.5, 0.5));
+  terminal.init(size);
   terminal.printWithColor(str);
   sga.setActorClass(Actor);
   automaton.getActors();
