@@ -21,16 +21,22 @@ export function getActors() {
         tc.options.color != null &&
         tc.options.color != "w"
       ) {
+        let isSpawning = false;
+        let a: Actor;
         actorTypes.forEach(t => {
-          if (!t.chars.includes(tc.char)) {
+          if (isSpawning || !t.chars.includes(tc.char)) {
             return;
           }
-          const a = sga.spawn(t.func, t.interval) as Actor;
-          a.pos.set(x, y);
-          a.char = tc.char;
-          a.options = tc.options;
-          terminal.setCharAt(x, y, undefined);
+          a = sga.spawn(t.func, t.interval);
+          isSpawning = true;
         });
+        if (!isSpawning) {
+          a = sga.spawn(() => {});
+        }
+        a.pos.set(x, y);
+        a.char = tc.char;
+        a.options = tc.options;
+        terminal.setCharAt(x, y, undefined);
       }
     }
   }

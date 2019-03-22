@@ -23,11 +23,13 @@ export class Actor extends sga.Actor {
 
   handlePlayer() {
     sga.pool.get().forEach((a: Actor) => {
-      if (a.options.color !== "r") {
+      if (a.options.color !== "r" && a.options.color !== "g") {
         return;
       }
       if (this.testCollision(a)) {
-        this.remove();
+        if (a.options.color === "r") {
+          this.remove();
+        }
         a.remove();
       }
     });

@@ -11,8 +11,8 @@ main.init(String.raw`
    r    
 #        #
 
-#        #
-
+# o      #
+  g
 #    @   #
      c  
 ##########
