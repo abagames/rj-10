@@ -27,7 +27,8 @@ export function getActors() {
           if (isSpawning || !t.chars.includes(tc.char)) {
             return;
           }
-          a = sga.spawn(t.func, t.interval);
+          a = sga.spawn(() => {});
+          a.addUpdater(() => t.func(a), t.interval);
           isSpawning = true;
         });
         if (!isSpawning) {
@@ -62,70 +63,66 @@ const angleOffsets = [
   [1, -1]
 ];
 
-function arrow(a: Actor, interval: number) {
+function arrow(a: Actor) {
   const reflectSlash = [-2, 4, 2, 0, -2, 4, 2, 0];
   const reflectBackSlash = [2, 0, -2, 4, 2, 0, -2, 4];
   const reflectHorizontal = [0, -2, 4, 2, 0, -2, 4, 2];
   const reflectVertical = [4, 2, 0, -2, 4, 2, 0, -2];
-  a.addUpdater(() => {
-    let ai = arrowChars.indexOf(a.char);
-    const o = angleOffsets[ai];
-    a.pos.add({ x: o[0], y: o[1] });
-    const c = terminal.getCharAt(a.pos.x, a.pos.y).char;
-    if (!isSpaceChar(c)) {
-      if (c === "/") {
-        ai += reflectSlash[ai];
-      } else if (c === "\\") {
-        ai += reflectBackSlash[ai];
-      } else if (ai % 2 === 0) {
-        ai += 4;
-        a.pos.set(a.prevPos);
-      } else {
-        const sx = isSpaceChar(
-          terminal.getCharAt(a.prevPos.x + o[0], a.prevPos.y).char
-        );
-        const sy = isSpaceChar(
-          terminal.getCharAt(a.prevPos.x, a.prevPos.y + o[1]).char
-        );
-        if (sx && !sy) {
-          ai += reflectHorizontal[ai];
-        } else if (!sx && sy) {
-          ai += reflectVertical[ai];
-        } else {
-          ai += 4;
-        }
-        a.pos.set(a.prevPos);
-      }
-      ai = wrap(ai, 0, 8);
-      a.char = arrowChars.charAt(ai);
-    }
-  }, interval);
-}
-
-function operated(a: Actor, interval: number) {
-  a.addUpdater(() => {
-    if (stickAngle === 0) {
-      return;
-    }
-    const o = angleOffsets[stickAngle - 1];
-    a.pos.add({ x: o[0], y: o[1] });
-    if (isSpaceChar(terminal.getCharAt(a.pos.x, a.pos.y).char)) {
-      return;
-    }
-    const sx = isSpaceChar(
-      terminal.getCharAt(a.prevPos.x + o[0], a.prevPos.y).char
-    );
-    const sy = isSpaceChar(
-      terminal.getCharAt(a.prevPos.x, a.prevPos.y + o[1]).char
-    );
-    if (sx && !sy) {
-      a.pos.y = a.prevPos.y;
-    } else if (!sx && sy) {
-      a.pos.x = a.prevPos.x;
+  let ai = arrowChars.indexOf(a.char);
+  const o = angleOffsets[ai];
+  a.pos.add({ x: o[0], y: o[1] });
+  const c = terminal.getCharAt(a.pos.x, a.pos.y).char;
+  if (!isSpaceChar(c)) {
+    if (c === "/") {
+      ai += reflectSlash[ai];
+    } else if (c === "\\") {
+      ai += reflectBackSlash[ai];
+    } else if (ai % 2 === 0) {
+      ai += 4;
+      a.pos.set(a.prevPos);
     } else {
+      const sx = isSpaceChar(
+        terminal.getCharAt(a.prevPos.x + o[0], a.prevPos.y).char
+      );
+      const sy = isSpaceChar(
+        terminal.getCharAt(a.prevPos.x, a.prevPos.y + o[1]).char
+      );
+      if (sx && !sy) {
+        ai += reflectHorizontal[ai];
+      } else if (!sx && sy) {
+        ai += reflectVertical[ai];
+      } else {
+        ai += 4;
+      }
       a.pos.set(a.prevPos);
     }
-  }, interval);
+    ai = wrap(ai, 0, 8);
+    a.char = arrowChars.charAt(ai);
+  }
+}
+
+function operated(a: Actor) {
+  if (stickAngle === 0) {
+    return;
+  }
+  const o = angleOffsets[stickAngle - 1];
+  a.pos.add({ x: o[0], y: o[1] });
+  if (isSpaceChar(terminal.getCharAt(a.pos.x, a.pos.y).char)) {
+    return;
+  }
+  const sx = isSpaceChar(
+    terminal.getCharAt(a.prevPos.x + o[0], a.prevPos.y).char
+  );
+  const sy = isSpaceChar(
+    terminal.getCharAt(a.prevPos.x, a.prevPos.y + o[1]).char
+  );
+  if (sx && !sy) {
+    a.pos.y = a.prevPos.y;
+  } else if (!sx && sy) {
+    a.pos.x = a.prevPos.x;
+  } else {
+    a.pos.set(a.prevPos);
+  }
 }
 
 function isSpaceChar(c: string) {
