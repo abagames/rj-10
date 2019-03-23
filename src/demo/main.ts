@@ -5,7 +5,7 @@ main.init(String.raw`
 
 #  /   Z\#
        r
-#      Z #
+#        #
      
 #  ^     #
    r    

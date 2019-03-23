@@ -4,12 +4,12 @@ import * as terminal from "./terminal";
 import { wrap } from "./util/math";
 
 type ActorType = "player" | "enemy" | "goal";
+type CharPart = { char: string; offset: Vector };
 
 export class Actor extends sga.Actor {
   pos = new Vector();
   prevPos = new Vector();
-  intPos = new Vector();
-  char = "";
+  chars: CharPart[] = [];
   options = undefined as terminal.CharOptions;
   type: ActorType;
 
@@ -26,11 +26,9 @@ export class Actor extends sga.Actor {
         }
       });
     }
-    this.prevPos.set(this.pos);
     super.update();
     this.pos.x = wrap(this.pos.x, 0, terminal.size.x);
     this.pos.y = wrap(this.pos.y, 0, terminal.size.y);
-    this.intPos.set(Math.floor(this.pos.x), Math.floor(this.pos.y));
     if (this.type === "player") {
       this.handlePlayer();
     }
@@ -50,11 +48,51 @@ export class Actor extends sga.Actor {
     });
   }
 
+  addChar(c: CharPart) {
+    this.chars.push(c);
+  }
+
+  getChar(offset: Vector) {
+    for (let c of this.chars) {
+      if (c.offset.equals(offset)) {
+        return c;
+      }
+    }
+  }
+
+  setChar(char: string, offset: Vector) {
+    for (let c of this.chars) {
+      if (c.offset.equals(offset)) {
+        c.char = char;
+        return;
+      }
+    }
+  }
+
+  getTerminalChars(offset = { x: 0, y: 0 }) {
+    return this.chars
+      .map(
+        c =>
+          terminal.getCharAt(
+            this.pos.x + c.offset.x + offset.x,
+            this.pos.y + c.offset.y + offset.y
+          ).char
+      )
+      .join("");
+  }
+
   testCollision(other: Actor) {
-    return this.intPos.x === other.intPos.x && this.intPos.y === other.intPos.y;
+    return this.pos.x === other.pos.x && this.pos.y === other.pos.y;
   }
 
   draw() {
-    terminal.setCharAt(this.intPos.x, this.intPos.y, this.char, this.options);
+    this.chars.forEach(c => {
+      terminal.setCharAt(
+        wrap(this.pos.x + c.offset.x, 0, terminal.size.x),
+        wrap(this.pos.y + c.offset.y, 0, terminal.size.y),
+        c.char,
+        this.options
+      );
+    });
   }
 }

@@ -108,6 +108,10 @@ export class Vector {
     return isInRange(this.x, x, x + width) && isInRange(this.y, y, y + height);
   }
 
+  equals(other: VectorLike) {
+    return this.x === other.x && this.y === other.y;
+  }
+
   get length() {
     return Math.sqrt(this.x * this.x + this.y * this.y);
   }
