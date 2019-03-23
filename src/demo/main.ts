@@ -6,15 +6,15 @@ main.init(String.raw`
 #  /   Z\#
        r
 #        #
-     
-#  ^     #
-   r    
+
+#  ^>    #
+   rr
 #        #
 
 # o      #
   g
 #    @   #
-     c  
+     c
 ##########
 
 `);

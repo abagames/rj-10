@@ -2,7 +2,7 @@ import * as terminal from "./terminal";
 import { Actor } from "./actor";
 import { stickAngle } from "./main";
 import * as sga from "./util/simpleGameActor";
-import { wrap } from "./util/math";
+import { wrap, range } from "./util/math";
 import { Vector } from "./util/vector";
 
 const arrowChars = ">nvz<N^Z";
@@ -16,45 +16,51 @@ export function getActors() {
   for (let x = 0; x < terminal.size.x; x++) {
     for (let y = 0; y < terminal.size.y; y++) {
       const tc = terminal.getCharAt(x, y);
-      if (
-        tc.char != null &&
-        tc.options.color != null &&
-        tc.options.color != "w" &&
-        tc.options.color != "l"
-      ) {
-        let isSpawning = false;
-        let a: Actor;
-        actorTypes.forEach(t => {
-          if (isSpawning || !t.chars.includes(tc.char)) {
-            return;
-          }
-          a = sga.spawn(() => {});
-          const u = a.addUpdater((u: sga.Updater & { offset: Vector }) => {
-            a.prevPos.set(a.pos);
-            t.func(a, u);
-          }, t.interval) as sga.Updater & { offset: Vector };
-          u.offset = new Vector(0);
-          isSpawning = true;
-        });
-        if (!isSpawning) {
-          a = sga.spawn(() => {});
-        }
+      if (isActorChar(tc)) {
+        const a = sga.spawn(() => {});
         a.pos.set(x, y);
-        a.addChar({ char: tc.char, offset: new Vector(0) });
-        /*if (tc.char === "^") {
-          a.addChar({ char: ">", offset: new Vector(1, 0) });
-          const u = a.addUpdater((u: sga.Updater & { offset: Vector }) => {
-            a.prevPos.set(a.pos);
-            arrow(a, u);
-          }, 2) as sga.Updater & { offset: Vector };
-          u.offset = new Vector(1, 0);
-        }*/
         a.options = tc.options;
-        terminal.setCharAt(x, y, undefined);
+        checkConnecting(x, y, 0, 0, tc.options.color).forEach(c => {
+          assignActorChar(a, c);
+        });
       }
     }
   }
   background = terminal.getState();
+}
+
+function assignActorChar(a: Actor, c: { char: string; offset: Vector }) {
+  a.addChar({ char: c.char, offset: c.offset });
+  actorTypes.forEach(t => {
+    if (!t.chars.includes(c.char)) {
+      return;
+    }
+    const u = a.addUpdater((u: sga.Updater & { offset: Vector }) => {
+      a.prevPos.set(a.pos);
+      t.func(a, u);
+    }, t.interval) as sga.Updater & { offset: Vector };
+    u.offset = c.offset;
+  });
+}
+
+function checkConnecting(
+  x: number,
+  y: number,
+  ox: number,
+  oy: number,
+  color: string
+) {
+  const c = terminal.getCharAt(x, y);
+  if (!isActorChar(c) || c.options.color !== color) {
+    return [];
+  }
+  terminal.setCharAt(x, y, undefined);
+  return [{ char: c.char, offset: new Vector(ox, oy) }]
+    .concat(checkConnecting(x, y - 1, ox, oy - 1, color))
+    .concat(checkConnecting(x + 1, y - 1, ox + 1, oy - 1, color))
+    .concat(checkConnecting(x + 1, y, ox + 1, oy, color))
+    .concat(checkConnecting(x, y + 1, ox, oy + 1, color))
+    .concat(checkConnecting(x + 1, y + 1, ox + 1, oy + 1, color));
 }
 
 export function update() {
@@ -132,4 +138,13 @@ function operated(a: Actor) {
 
 function isEmpty(cs: string) {
   return ![...cs].some(c => c != null && c !== " ");
+}
+
+function isActorChar(c: { char: string; options: terminal.CharOptions }) {
+  return (
+    c.char != null &&
+    c.options.color != null &&
+    c.options.color != "w" &&
+    c.options.color != "l"
+  );
 }
