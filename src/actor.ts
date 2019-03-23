@@ -12,7 +12,9 @@ export class Actor extends sga.Actor {
   chars: CharPart[] = [];
   options = undefined as terminal.CharOptions;
   type: ActorType;
-  connecting: { char: string; offset: Vector }[];
+  size = new Vector();
+  connecting: CharPart[];
+  isWeak = false;
 
   update() {
     if (this.type == null) {
@@ -26,8 +28,24 @@ export class Actor extends sga.Actor {
           this.type = c.type;
         }
       });
+      for (let c of this.chars) {
+        this.size.x = Math.max(this.size.x, c.offset.x);
+        this.size.y = Math.max(this.size.y, c.offset.y);
+      }
+      this.size.x++;
+      this.size.y++;
     }
     super.update();
+    if (
+      this.isWeak &&
+      (this.pos.x < 0 ||
+        this.pos.x + this.size.x >= terminal.size.x ||
+        this.pos.y < 0 ||
+        this.pos.y + this.size.y >= terminal.size.y)
+    ) {
+      this.remove();
+      return;
+    }
     this.pos.x = wrap(this.pos.x, 0, terminal.size.x);
     this.pos.y = wrap(this.pos.y, 0, terminal.size.y);
     if (this.type === "player") {

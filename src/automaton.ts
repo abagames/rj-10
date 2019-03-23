@@ -8,13 +8,14 @@ import { Vector } from "./util/vector";
 const arrowChars = ">nvz<N^Z";
 const actorTypes: {
   chars: string;
-  updaterFunc: Function;
-  interval: number;
+  updaterFunc?: Function;
+  interval?: number;
   initFunc?: Function;
 }[] = [
   { chars: arrowChars, updaterFunc: arrow, interval: 2 },
   { chars: "@", updaterFunc: operated, interval: 1 },
-  { chars: "F", updaterFunc: fire, interval: 4, initFunc: fireInit }
+  { chars: "F", updaterFunc: fire, interval: 4, initFunc: fireInit },
+  { chars: "w", initFunc: weakInit }
 ];
 let background;
 
@@ -60,7 +61,7 @@ export function initActors() {
 function initActor(a: Actor) {
   for (let u of a.updaterPool.get() as any) {
     actorTypes.forEach(t => {
-      if (!t.chars.includes(u.char) || t.initFunc == null) {
+      if (t.initFunc == null || !t.chars.includes(u.char)) {
         return;
       }
       t.initFunc(u, a);
@@ -74,10 +75,13 @@ function assignActorChar(a: Actor, c: { char: string; offset: Vector }) {
     if (!t.chars.includes(c.char)) {
       return;
     }
-    const u = a.addUpdater((u: any) => {
-      a.prevPos.set(a.pos);
-      t.updaterFunc(a, u);
-    }, t.interval) as any;
+    const u =
+      t.updaterFunc == null
+        ? a.addUpdater(() => {}, 9999)
+        : (a.addUpdater((u: any) => {
+            a.prevPos.set(a.pos);
+            t.updaterFunc(a, u);
+          }, t.interval) as any);
     u.offset = c.offset;
     u.char = c.char;
   });
@@ -132,6 +136,10 @@ function arrow(a: Actor, u: any) {
   a.pos.add({ x: o[0], y: o[1] });
   const cs = a.getTerminalChars();
   if (!isEmpty(cs)) {
+    if (a.isWeak) {
+      a.remove();
+      return;
+    }
     if (cs.includes("/")) {
       ai += reflectSlash[ai];
     } else if (cs.includes("\\")) {
@@ -163,6 +171,10 @@ function operated(a: Actor) {
   const o = angleOffsets[stickAngle - 1];
   a.pos.add({ x: o[0], y: o[1] });
   if (isEmpty(a.getTerminalChars())) {
+    return;
+  }
+  if (a.isWeak) {
+    this.remove();
     return;
   }
   const ex = isEmpty(a.getTerminalChars({ x: 0, y: -o[1] }));
@@ -211,6 +223,10 @@ function fire(a: Actor, u) {
     );
     initActor(sa);
   });
+}
+
+function weakInit(u, a: Actor) {
+  a.isWeak = true;
 }
 
 function isEmpty(cs: string) {
