@@ -34,6 +34,7 @@ export function init(str: string) {
   terminal.printWithColor(str);
   sga.setActorClass(Actor);
   automaton.getActors();
+  automaton.initActors();
   update();
 }
 

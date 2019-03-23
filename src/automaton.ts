@@ -1,14 +1,20 @@
 import * as terminal from "./terminal";
-import { Actor } from "./actor";
+import { Actor, getActorAt } from "./actor";
 import { stickAngle } from "./main";
 import * as sga from "./util/simpleGameActor";
 import { wrap, range } from "./util/math";
 import { Vector } from "./util/vector";
 
 const arrowChars = ">nvz<N^Z";
-const actorTypes: { chars: string; func: Function; interval: number }[] = [
-  { chars: arrowChars, func: arrow, interval: 2 },
-  { chars: "@", func: operated, interval: 1 }
+const actorTypes: {
+  chars: string;
+  updaterFunc: Function;
+  interval: number;
+  initFunc?: Function;
+}[] = [
+  { chars: arrowChars, updaterFunc: arrow, interval: 2 },
+  { chars: "@", updaterFunc: operated, interval: 1 },
+  { chars: "F", updaterFunc: fire, interval: 4, initFunc: fireInit }
 ];
 let background;
 
@@ -17,16 +23,49 @@ export function getActors() {
     for (let y = 0; y < terminal.size.y; y++) {
       const tc = terminal.getCharAt(x, y);
       if (isActorChar(tc)) {
-        const a = sga.spawn(() => {});
-        a.pos.set(x, y);
-        a.options = tc.options;
-        checkConnecting(x, y, 0, 0, tc.options.color).forEach(c => {
-          assignActorChar(a, c);
-        });
+        spawnActor(
+          x,
+          y,
+          tc.options,
+          checkConnecting(x, y, 0, 0, tc.options.color)
+        );
       }
     }
   }
   background = terminal.getState();
+}
+
+function spawnActor(
+  x: number,
+  y: number,
+  options: terminal.CharOptions,
+  connecting
+) {
+  const a = sga.spawn(() => {}) as Actor;
+  a.pos.set(x, y);
+  a.options = options;
+  a.connecting = connecting;
+  connecting.forEach(c => {
+    assignActorChar(a, c);
+  });
+  return a;
+}
+
+export function initActors() {
+  for (let a of sga.pool.get() as Actor[]) {
+    initActor(a);
+  }
+}
+
+function initActor(a: Actor) {
+  for (let u of a.updaterPool.get() as any) {
+    actorTypes.forEach(t => {
+      if (!t.chars.includes(u.char) || t.initFunc == null) {
+        return;
+      }
+      t.initFunc(u, a);
+    });
+  }
 }
 
 function assignActorChar(a: Actor, c: { char: string; offset: Vector }) {
@@ -35,11 +74,12 @@ function assignActorChar(a: Actor, c: { char: string; offset: Vector }) {
     if (!t.chars.includes(c.char)) {
       return;
     }
-    const u = a.addUpdater((u: sga.Updater & { offset: Vector }) => {
+    const u = a.addUpdater((u: any) => {
       a.prevPos.set(a.pos);
-      t.func(a, u);
-    }, t.interval) as sga.Updater & { offset: Vector };
+      t.updaterFunc(a, u);
+    }, t.interval) as any;
     u.offset = c.offset;
+    u.char = c.char;
   });
 }
 
@@ -82,7 +122,7 @@ const angleOffsets = [
   [1, -1]
 ];
 
-function arrow(a: Actor, u: sga.Updater & { offset: Vector }) {
+function arrow(a: Actor, u: any) {
   const reflectSlash = [-2, 4, 2, 0, -2, 4, 2, 0];
   const reflectBackSlash = [2, 0, -2, 4, 2, 0, -2, 4];
   const reflectHorizontal = [0, -2, 4, 2, 0, -2, 4, 2];
@@ -134,6 +174,43 @@ function operated(a: Actor) {
   } else {
     a.pos.set(a.prevPos);
   }
+}
+
+function fireInit(u, a: Actor) {
+  const nas: Actor[] = [];
+  for (let ao of angleOffsets) {
+    const na = getActorAt({
+      x: a.pos.x + u.offset.x + ao[0],
+      y: a.pos.y + u.offset.y + ao[1]
+    });
+    if (
+      na != null &&
+      na !== a &&
+      nas.indexOf(na) < 0 &&
+      !na.connecting.some(c => c.char === "F")
+    ) {
+      nas.push(na);
+    }
+  }
+  u.neighboringActors = nas.map(na => {
+    return {
+      actor: { options: na.options, connecting: na.connecting },
+      offset: new Vector(na.pos).sub(a.pos)
+    };
+  });
+  console.log(u.neighboringActors);
+}
+
+function fire(a: Actor, u) {
+  u.neighboringActors.forEach(na => {
+    const sa = spawnActor(
+      a.pos.x + na.offset.x,
+      a.pos.y + na.offset.y,
+      na.actor.options,
+      na.actor.connecting
+    );
+    initActor(sa);
+  });
 }
 
 function isEmpty(cs: string) {

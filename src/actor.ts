@@ -1,5 +1,5 @@
 import * as sga from "./util/simpleGameActor";
-import { Vector } from "./util/vector";
+import { Vector, VectorLike } from "./util/vector";
 import * as terminal from "./terminal";
 import { wrap } from "./util/math";
 
@@ -12,6 +12,7 @@ export class Actor extends sga.Actor {
   chars: CharPart[] = [];
   options = undefined as terminal.CharOptions;
   type: ActorType;
+  connecting: { char: string; offset: Vector }[];
 
   update() {
     if (this.type == null) {
@@ -82,7 +83,20 @@ export class Actor extends sga.Actor {
   }
 
   testCollision(other: Actor) {
-    return this.pos.x === other.pos.x && this.pos.y === other.pos.y;
+    return this.chars.some(c =>
+      other.chars.some(
+        oc =>
+          this.pos.x + c.offset.x === other.pos.x + oc.offset.x &&
+          this.pos.y + c.offset.y === other.pos.y + oc.offset.y
+      )
+    );
+  }
+
+  testCollisionWithPosition(pos: VectorLike) {
+    return this.chars.some(
+      c =>
+        this.pos.x + c.offset.x === pos.x && this.pos.y + c.offset.y === pos.y
+    );
   }
 
   draw() {
@@ -94,5 +108,13 @@ export class Actor extends sga.Actor {
         this.options
       );
     });
+  }
+}
+
+export function getActorAt(pos: VectorLike) {
+  for (let a of sga.pool.get() as Actor[]) {
+    if (a.testCollisionWithPosition(pos)) {
+      return a;
+    }
   }
 }
