@@ -75,6 +75,7 @@ function update() {
     }
     view.clear();
     automaton.update();
+    sound.update();
     terminal.update();
     if (pointer.isPressed) {
       view.context.drawImage(

@@ -4,6 +4,7 @@ import { stickAngle } from "./main";
 import * as sga from "./util/simpleGameActor";
 import { wrap, range } from "./util/math";
 import { Vector } from "./util/vector";
+import { play } from "./sound";
 
 const arrowChars = ">nvz<N^Z";
 const actorTypes: {
@@ -159,6 +160,7 @@ function arrow(a: Actor, u: any) {
     }
     ai = wrap(ai, 0, 8);
     a.setChar(arrowChars.charAt(ai), u.offset);
+    play(2, "a<a>a");
   }
 }
 
