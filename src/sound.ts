@@ -24,18 +24,23 @@ export function update() {
     }
     playSynth(
       synths[i],
-      `t${tempo} o${defaultOctave} l${defaultLength} ${mml}`
+      `t${tempo} o${defaultOctave} l${defaultLength} ${mml}`,
+      i === 3
     );
     mmls[i] = undefined;
   });
 }
 
-function playSynth(synth, mml: string) {
+function playSynth(synth, mml: string, isNoise: boolean) {
   const iter = new MMLIterator(mml);
   for (let n of iter) {
     if (n.type === "note") {
-      const freq = midiNoteNumberToFrequency(n.noteNumber);
-      synth.triggerAttackRelease(freq, n.duration, `+${n.time + 0.1}`);
+      if (isNoise) {
+        synth.triggerAttackRelease(n.duration, `+${n.time + 0.1}`);
+      } else {
+        const freq = midiNoteNumberToFrequency(n.noteNumber);
+        synth.triggerAttackRelease(freq, n.duration, `+${n.time + 0.1}`);
+      }
     }
   }
 }

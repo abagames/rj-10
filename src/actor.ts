@@ -2,6 +2,7 @@ import * as sga from "./util/simpleGameActor";
 import { Vector, VectorLike } from "./util/vector";
 import * as terminal from "./terminal";
 import { wrap } from "./util/math";
+import { play } from "./sound";
 
 type ActorType = "player" | "enemy" | "goal";
 type CharPart = { char: string; offset: Vector };
@@ -66,6 +67,10 @@ export class Actor extends sga.Actor {
       if (this.testCollision(a)) {
         if (a.type === "enemy") {
           this.remove();
+          play(3, "crcrc");
+        } else {
+          play(0, "gba>e");
+          play(1, "ggbb");
         }
         a.remove();
       }
