@@ -18,14 +18,19 @@ export class Actor extends sga.Actor {
 
   update() {
     if (this.type == null) {
-      const actorTypeColors: { colors: string; type: ActorType }[] = [
-        { colors: "cb", type: "player" },
-        { colors: "rp", type: "enemy" },
-        { colors: "gy", type: "goal" }
+      const actorTypeColors: {
+        colors: String;
+        type: ActorType;
+        priority: number;
+      }[] = [
+        { colors: "cb", type: "player", priority: 2 },
+        { colors: "rp", type: "enemy", priority: 1 },
+        { colors: "gy", type: "goal", priority: 3 }
       ];
       actorTypeColors.forEach(c => {
         if (c.colors.includes(this.options.color)) {
           this.type = c.type;
+          this.setPriority(c.priority);
         }
       });
       for (let c of this.chars) {
@@ -89,7 +94,7 @@ export class Actor extends sga.Actor {
   }
 
   getTerminalChars(offset = { x: 0, y: 0 }) {
-    return this.chars
+    const tc = this.chars
       .map(
         c =>
           terminal.getCharAt(
@@ -98,6 +103,16 @@ export class Actor extends sga.Actor {
           ).char
       )
       .join("");
+    if (this.type === "player") {
+      return tc;
+    }
+    const ac = sga.pool
+      .get()
+      .map((o: Actor) =>
+        o === this || o.type !== "goal" ? undefined : this.getCollidingChars(o)
+      )
+      .join("");
+    return tc + ac;
   }
 
   testCollision(other: Actor) {
@@ -108,6 +123,21 @@ export class Actor extends sga.Actor {
           this.pos.y + c.offset.y === other.pos.y + oc.offset.y
       )
     );
+  }
+
+  getCollidingChars(other: Actor) {
+    return this.chars
+      .map(c =>
+        other.chars
+          .map(oc =>
+            this.pos.x + c.offset.x === other.pos.x + oc.offset.x &&
+            this.pos.y + c.offset.y === other.pos.y + oc.offset.y
+              ? oc.char
+              : undefined
+          )
+          .join("")
+      )
+      .join("");
   }
 
   testCollisionWithPosition(pos: VectorLike) {

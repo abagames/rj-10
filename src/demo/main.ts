@@ -1,22 +1,22 @@
 import * as main from "../main";
 
 main.init(String.raw`
-###########
+############
 
-#  /     \#
-        
-#      Z  #
-       r
-#  ^>     #
-   rr
-#         #
+#    /    \#
+     y    y
+# v     Z  #
+  g     r
+#    ^     #
+     r
+#          #
 
-#   ^     #
+#   ^      #
     b
-# o w     #
-  g b
-#   F@    #
+# oow      #
+  ggb
+#   F@     #
     cc 
-###########
+############
 
 `);

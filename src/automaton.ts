@@ -101,10 +101,8 @@ function checkConnecting(
   terminal.setCharAt(x, y, undefined);
   return [{ char: c.char, offset: new Vector(ox, oy) }]
     .concat(checkConnecting(x, y - 1, ox, oy - 1, color))
-    .concat(checkConnecting(x + 1, y - 1, ox + 1, oy - 1, color))
     .concat(checkConnecting(x + 1, y, ox + 1, oy, color))
-    .concat(checkConnecting(x, y + 1, ox, oy + 1, color))
-    .concat(checkConnecting(x + 1, y + 1, ox + 1, oy + 1, color));
+    .concat(checkConnecting(x, y + 1, ox, oy + 1, color));
 }
 
 export function update() {
@@ -190,7 +188,7 @@ function operated(a: Actor) {
 
 function fireInit(u, a: Actor) {
   const nas: Actor[] = [];
-  for (let ao of angleOffsets) {
+  for (let ao of angleOffsets.filter((_, i) => i % 2 == 0)) {
     const na = getActorAt({
       x: a.pos.x + u.offset.x + ao[0],
       y: a.pos.y + u.offset.y + ao[1]
@@ -202,6 +200,7 @@ function fireInit(u, a: Actor) {
       !na.connecting.some(c => c.char === "F")
     ) {
       nas.push(na);
+      na.remove();
     }
   }
   u.neighboringActors = nas.map(na => {
@@ -210,7 +209,6 @@ function fireInit(u, a: Actor) {
       offset: new Vector(na.pos).sub(a.pos)
     };
   });
-  console.log(u.neighboringActors);
 }
 
 function fire(a: Actor, u) {
