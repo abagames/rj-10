@@ -62,7 +62,7 @@ export class Actor extends sga.Actor {
   // cSpell: disable
   handlePlayer() {
     sga.pool.get().forEach((a: Actor) => {
-      if (a.type === "player") {
+      if (a.type == null || a.type === "player") {
         return;
       }
       if (this.testCollision(a)) {
@@ -70,8 +70,8 @@ export class Actor extends sga.Actor {
           this.remove();
           play(3, "crcrc");
         } else {
-          play(0, "gba>e");
-          play(1, "ggbb");
+          play(0, "gbdb");
+          play(1, "g4");
         }
         a.remove();
       }
