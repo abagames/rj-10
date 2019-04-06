@@ -5,9 +5,10 @@ Text based games.
 ## ToDo
 
 - [x] add goal actor to background for goal and enemy
-- [ ] sound
-- [ ] left/right hand
+- [x] sound
+- [x] left/right hand
+- [ ] slow interval
+
 - [ ] gravity
 - [ ] jump
 - [ ] fire on just pressed
-- [ ] slow interval

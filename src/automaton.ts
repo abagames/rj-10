@@ -14,6 +14,8 @@ const actorTypes: {
   initFunc?: Function;
 }[] = [
   { chars: arrowChars, updaterFunc: arrow, interval: 2 },
+  { chars: "R", updaterFunc: rotateRight, interval: 2, initFunc: rotateInit },
+  { chars: "L", updaterFunc: rotateLeft, interval: 2, initFunc: rotateInit },
   { chars: "@", updaterFunc: operated, interval: 1 },
   { chars: "F", updaterFunc: fire, interval: 4, initFunc: fireInit },
   { chars: "w", initFunc: weakInit }
@@ -227,6 +229,32 @@ function fire(a: Actor, u) {
 
 function weakInit(u, a: Actor) {
   a.isWeak = true;
+}
+
+function rotateInit(u) {
+  u.angle = 6;
+}
+
+function rotateRight(a: Actor, u) {
+  rotate(a, u, 2);
+}
+
+function rotateLeft(a: Actor, u) {
+  rotate(a, u, -2);
+}
+
+function rotate(a: Actor, u, rotateAngle: number) {
+  u.angle = wrap(u.angle + rotateAngle, 0, 8);
+  for (let i = 0; i < 5; i++) {
+    const o = angleOffsets[u.angle];
+    const ofs = { x: o[0], y: o[1] };
+    const ie = isEmpty(a.getTerminalChars(ofs));
+    if (ie) {
+      a.pos.add(ofs);
+      break;
+    }
+    u.angle = wrap(u.angle - rotateAngle, 0, 8);
+  }
 }
 
 function isEmpty(cs: string) {

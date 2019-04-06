@@ -59,6 +59,7 @@ export class Actor extends sga.Actor {
     }
   }
 
+  // cSpell: disable
   handlePlayer() {
     sga.pool.get().forEach((a: Actor) => {
       if (a.type === "player") {
@@ -76,6 +77,7 @@ export class Actor extends sga.Actor {
       }
     });
   }
+  // cSpell: enable
 
   addChar(c: CharPart) {
     this.chars.push(c);
