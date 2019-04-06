@@ -224,7 +224,9 @@ function fire(a: Actor, u) {
       na.actor.connecting
     );
     initActor(sa);
+    sa.isFired = true;
   });
+  play(2, "<b<b");
 }
 
 function weakInit(u, a: Actor) {

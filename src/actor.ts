@@ -16,6 +16,7 @@ export class Actor extends sga.Actor {
   size = new Vector();
   connecting: CharPart[];
   isWeak = false;
+  isFired = false;
 
   update() {
     if (this.type == null) {
@@ -41,7 +42,11 @@ export class Actor extends sga.Actor {
       this.size.x++;
       this.size.y++;
     }
-    super.update();
+    if (this.isFired) {
+      this.isFired = false;
+    } else {
+      super.update();
+    }
     if (
       this.isWeak &&
       (this.pos.x < 0 ||
