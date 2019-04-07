@@ -163,7 +163,10 @@ function arrow(a: Actor, u: any) {
     }
     ai = wrap(ai, 0, 8);
     a.setChar(arrowChars.charAt(ai), u.offset);
-    play(2, "a<a>a");
+    play(0, "a<a>a");
+    play(1, "<g8.");
+  } else {
+    play(2, "<e");
   }
 }
 
@@ -191,6 +194,7 @@ function rotate(a: Actor, u, rotateAngle: number) {
     }
     u.angle = wrap(u.angle - rotateAngle, 0, 8);
   }
+  play(2, "<d");
 }
 
 function operated(a: Actor) {
@@ -200,8 +204,10 @@ function operated(a: Actor) {
   const o = angleOffsets[stickAngle - 1];
   a.pos.add({ x: o[0], y: o[1] });
   if (isEmpty(a.getTerminalChars())) {
+    play(2, "<e");
     return;
   }
+  play(2, "<b");
   if (a.isWeak) {
     this.remove();
     return;
@@ -253,7 +259,8 @@ function fire(a: Actor, u) {
     initActor(sa);
     sa.isFired = true;
   });
-  play(2, "<b<b");
+  play(0, "<b<b");
+  play(1, "e16");
 }
 
 function weakInit(u, a: Actor) {
