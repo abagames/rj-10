@@ -9,8 +9,8 @@ main.init(String.raw`
   g     r
 #    ^      #
      r
-#      ##   #
-
+#    s ##   #
+     r
 #      R#   #
        r
 #           #

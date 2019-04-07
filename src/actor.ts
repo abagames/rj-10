@@ -4,7 +4,7 @@ import * as terminal from "./terminal";
 import { wrap } from "./util/math";
 import { play } from "./sound";
 
-type ActorType = "player" | "enemy" | "goal";
+type ActorType = "player" | "enemy" | "goal" | "none";
 type CharPart = { char: string; offset: Vector };
 
 export class Actor extends sga.Actor {
@@ -17,6 +17,7 @@ export class Actor extends sga.Actor {
   connecting: CharPart[];
   isWeak = false;
   isFired = false;
+  slowRatio = 1;
 
   update() {
     if (this.type == null) {
@@ -35,12 +36,18 @@ export class Actor extends sga.Actor {
           this.setPriority(c.priority);
         }
       });
+      if (this.type == null) {
+        this.type = "none";
+      }
       for (let c of this.chars) {
         this.size.x = Math.max(this.size.x, c.offset.x);
         this.size.y = Math.max(this.size.y, c.offset.y);
       }
       this.size.x++;
       this.size.y++;
+      this.updaterPool.get().forEach((u: sga.Updater) => {
+        u.interval *= this.slowRatio;
+      });
     }
     if (this.isFired) {
       this.isFired = false;

@@ -18,7 +18,8 @@ const actorTypes: {
   { chars: "L", updaterFunc: rotateLeft, interval: 2, initFunc: rotateInit },
   { chars: "@", updaterFunc: operated, interval: 1 },
   { chars: "F", updaterFunc: fire, interval: 4, initFunc: fireInit },
-  { chars: "w", initFunc: weakInit }
+  { chars: "w", initFunc: weakInit },
+  { chars: "s", initFunc: slowInit }
 ];
 let background;
 
@@ -166,6 +167,32 @@ function arrow(a: Actor, u: any) {
   }
 }
 
+function rotateInit(u) {
+  u.angle = 6;
+}
+
+function rotateRight(a: Actor, u) {
+  rotate(a, u, 2);
+}
+
+function rotateLeft(a: Actor, u) {
+  rotate(a, u, -2);
+}
+
+function rotate(a: Actor, u, rotateAngle: number) {
+  u.angle = wrap(u.angle + rotateAngle, 0, 8);
+  for (let i = 0; i < 5; i++) {
+    const o = angleOffsets[u.angle];
+    const ofs = { x: o[0], y: o[1] };
+    const ie = isEmpty(a.getTerminalChars(ofs));
+    if (ie) {
+      a.pos.add(ofs);
+      break;
+    }
+    u.angle = wrap(u.angle - rotateAngle, 0, 8);
+  }
+}
+
 function operated(a: Actor) {
   if (stickAngle === 0) {
     return;
@@ -233,30 +260,8 @@ function weakInit(u, a: Actor) {
   a.isWeak = true;
 }
 
-function rotateInit(u) {
-  u.angle = 6;
-}
-
-function rotateRight(a: Actor, u) {
-  rotate(a, u, 2);
-}
-
-function rotateLeft(a: Actor, u) {
-  rotate(a, u, -2);
-}
-
-function rotate(a: Actor, u, rotateAngle: number) {
-  u.angle = wrap(u.angle + rotateAngle, 0, 8);
-  for (let i = 0; i < 5; i++) {
-    const o = angleOffsets[u.angle];
-    const ofs = { x: o[0], y: o[1] };
-    const ie = isEmpty(a.getTerminalChars(ofs));
-    if (ie) {
-      a.pos.add(ofs);
-      break;
-    }
-    u.angle = wrap(u.angle - rotateAngle, 0, 8);
-  }
+function slowInit(u, a: Actor) {
+  a.slowRatio *= 2;
 }
 
 function isEmpty(cs: string) {

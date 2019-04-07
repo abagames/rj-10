@@ -7,7 +7,7 @@ Text based games.
 - [x] add goal actor to background for goal and enemy
 - [x] sound
 - [x] left/right hand
-- [ ] slow interval
+- [x] slow interval
 
 - [ ] gravity
 - [ ] jump
