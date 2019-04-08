@@ -17,7 +17,7 @@ export class Actor extends sga.Actor {
   connecting: CharPart[];
   isWeak = false;
   isFired = false;
-  slowRatio = 1;
+  intervalRatio = 1;
 
   update() {
     if (this.type == null) {
@@ -46,7 +46,7 @@ export class Actor extends sga.Actor {
       this.size.x++;
       this.size.y++;
       this.updaterPool.get().forEach((u: sga.Updater) => {
-        u.interval *= this.slowRatio;
+        u.interval = Math.ceil(u.interval * this.intervalRatio);
       });
     }
     if (this.isFired) {

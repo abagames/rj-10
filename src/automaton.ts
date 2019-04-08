@@ -19,7 +19,8 @@ const actorTypes: {
   { chars: "@", updaterFunc: operated, interval: 1 },
   { chars: "F", updaterFunc: fire, interval: 4, initFunc: fireInit },
   { chars: "w", initFunc: weakInit },
-  { chars: "s", initFunc: slowInit }
+  { chars: "s", initFunc: slowInit },
+  { chars: "f", initFunc: fastInit }
 ];
 let background;
 
@@ -268,7 +269,11 @@ function weakInit(u, a: Actor) {
 }
 
 function slowInit(u, a: Actor) {
-  a.slowRatio *= 2;
+  a.intervalRatio *= 2;
+}
+
+function fastInit(u, a: Actor) {
+  a.intervalRatio /= 2;
 }
 
 function isEmpty(cs: string) {
