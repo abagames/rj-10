@@ -140,6 +140,7 @@ function arrow(a: Actor, u: any) {
   const cs = a.getTerminalChars();
   if (!isEmpty(cs)) {
     if (a.isWeak) {
+      play(3, "c");
       a.remove();
       return;
     }
@@ -259,6 +260,7 @@ function fire(a: Actor, u) {
     );
     initActor(sa);
     sa.isFired = true;
+    sa.isWeak = true;
   });
   play(0, "<b<b");
   play(1, "e16");
