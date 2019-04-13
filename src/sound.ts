@@ -11,7 +11,7 @@ export const synths = [
 const mmls: string[] = range(4).map(() => undefined);
 const parts: Tone.Part[] = range(4).map(() => undefined);
 const tempo = 200;
-const defaultOctave = 5;
+const defaultOctave = 4;
 const defaultLength = 32;
 
 Tone.Transport.start();

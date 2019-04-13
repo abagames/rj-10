@@ -1,26 +1,26 @@
 import * as main from "../main";
 
 main.init(String.raw`
-#############
+-------------
 
-#    /     \#
-     y     y
-# v     Z   #
+|    /     \|
+           y
+| v     Z   |
   g     r
-#    ^      #
+|    ^      |
      r
-#    s ##   #
+|    f ##   |
      r
-#      R#   #
+|      R#   |
        r
-#           #
-
-#   ^       #
+|      s    |
+       r
+|   ^       |
     b
-# oow       #
+| oow       |
   ggb
-#   F@      #
-    cc 
-#############
+|   F@      |
+    cc
+-------------
 
 `);

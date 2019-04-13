@@ -8,6 +8,7 @@ Text based games.
 - [x] sound
 - [x] left/right hand
 - [x] slow interval
+- [ ] Game success/fail
 
 - [ ] gravity
 - [ ] jump

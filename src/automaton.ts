@@ -148,27 +148,33 @@ function arrow(a: Actor, u: any) {
       ai += reflectSlash[ai];
     } else if (cs.includes("\\")) {
       ai += reflectBackSlash[ai];
-    } else if (ai % 2 === 0) {
-      ai += 4;
-      a.pos.set(a.prevPos);
-    } else {
-      const ex = isEmpty(a.getTerminalChars({ x: 0, y: -o[1] }));
-      const ey = isEmpty(a.getTerminalChars({ x: -o[0], y: 0 }));
-      if (ex && !ey) {
-        ai += reflectHorizontal[ai];
-      } else if (!ex && ey) {
-        ai += reflectVertical[ai];
-      } else {
+    } else if (cs.includes("-") || cs.includes("|")) {
+      if (ai % 2 === 0) {
         ai += 4;
+        a.pos.set(a.prevPos);
+      } else {
+        const ex = isEmpty(a.getTerminalChars({ x: 0, y: -o[1] }));
+        const ey = isEmpty(a.getTerminalChars({ x: -o[0], y: 0 }));
+        if (ex && !ey) {
+          ai += reflectHorizontal[ai];
+        } else if (!ex && ey) {
+          ai += reflectVertical[ai];
+        } else {
+          ai += 4;
+        }
+        a.pos.set(a.prevPos);
       }
-      a.pos.set(a.prevPos);
+    } else {
+      play(3, "c");
+      a.remove();
+      return;
     }
     ai = wrap(ai, 0, 8);
     a.setChar(arrowChars.charAt(ai), u.offset);
     play(0, "a<a>a");
-    play(1, "<g8.");
+    play(1, "g8.");
   } else {
-    play(2, "<e");
+    play(2, "e");
   }
 }
 
@@ -196,7 +202,7 @@ function rotate(a: Actor, u, rotateAngle: number) {
     }
     u.angle = wrap(u.angle - rotateAngle, 0, 8);
   }
-  play(2, "<d");
+  play(2, "d");
 }
 
 function operated(a: Actor) {
@@ -206,10 +212,10 @@ function operated(a: Actor) {
   const o = angleOffsets[stickAngle - 1];
   a.pos.add({ x: o[0], y: o[1] });
   if (isEmpty(a.getTerminalChars())) {
-    play(2, "<e");
+    play(0, "e");
     return;
   }
-  play(2, "<b");
+  play(0, "b");
   if (a.isWeak) {
     this.remove();
     return;
@@ -260,9 +266,8 @@ function fire(a: Actor, u) {
     );
     initActor(sa);
     sa.isFired = true;
-    sa.isWeak = true;
   });
-  play(0, "<b<b");
+  play(0, "b<b");
   play(1, "e16");
 }
 

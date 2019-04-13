@@ -82,8 +82,8 @@ export class Actor extends sga.Actor {
           this.remove();
           play(3, "crcrc");
         } else {
-          play(0, "gbdb");
-          play(1, "g4");
+          play(0, ">gbdb");
+          play(1, ">g4");
         }
         a.remove();
       }
