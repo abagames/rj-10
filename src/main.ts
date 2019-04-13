@@ -25,7 +25,10 @@ export function init(str: string) {
   const sx = Math.max(...sl.map(l => l.length));
   const sy = (sl.length - 2) / 2;
   const size = new Vector(sx, sy);
-  view.init({ x: (size.x + 2) * 6 * 2, y: (size.y + 2) * 6 * 2 });
+  view.init({
+    x: (size.x + 2) * 6 * 2,
+    y: (size.y + 2 + terminal.paddingTop + terminal.paddingBottom) * 6 * 2
+  });
   centerPos = new Vector(view.size.x / 2, view.size.y / 2);
   keyboard.init({ onKeyDown: sound.resumeAudioContext });
   initPointer(sound.resumeAudioContext);

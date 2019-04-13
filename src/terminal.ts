@@ -28,6 +28,10 @@ let charGrid: string[][];
 let colorGrid: string[][];
 let backgroundColorGrid: string[][];
 let rotationGrid: string[][];
+export const paddingTop = 1;
+export const paddingBottom = 1;
+let topLineChars = "STAGE";
+let bottomLineChars = "3-------";
 const colorChars = "lrgybpcw";
 type ColorChar = "l" | "r" | "g" | "y" | "b" | "p" | "c" | "w";
 const rotationChars = "kljhnmbvopiu9087";
@@ -182,6 +186,11 @@ export function update() {
       printChar(c, x, y, getCharOption(cg, bg, rg));
     }
   }
+  const lo = getCharOption("l", "w", undefined);
+  for (let x = 0; x < size.x; x++) {
+    printChar(topLineChars.charAt(x) + " ", x, -1, lo);
+    printChar(bottomLineChars.charAt(x) + " ", x, size.y, lo);
+  }
 }
 
 export function getCharOption(cg: string, bg: string, rg: string) {
@@ -244,22 +253,25 @@ function printChar(c: string, x: number, y: number, options: CharOptions) {
   if (
     x < 0 ||
     x + options.scale > size.x ||
-    y < 0 ||
-    y + options.scale > size.y
+    y < -paddingTop ||
+    y + options.scale > size.y + paddingBottom
   ) {
     return;
   }
   const ix = (x + 1) * letterSize;
-  const iy = (y + 1) * letterSize;
+  const iy = (y + 1 + paddingTop) * letterSize;
   const scaledSize = letterSize * options.scale;
-  if (cca == 0x20) {
+  if (cca == 0x20 && options.backgroundColor === "b") {
     view.context.clearRect(ix, iy, scaledSize, scaledSize);
     return;
   }
-  const cc = cca - 0x21;
   const rgb = rgbObjects[colorChars.indexOf(options.backgroundColor)];
   view.context.fillStyle = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
   view.context.fillRect(ix, iy, scaledSize, scaledSize);
+  if (cca == 0x20) {
+    return;
+  }
+  const cc = cca - 0x21;
   if (
     options.color === "w" &&
     options.angleIndex % 4 === 0 &&
