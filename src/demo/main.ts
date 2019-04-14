@@ -4,9 +4,9 @@ main.init(String.raw`
 -------------
 
 |    /     \|
-           y
-| v     Z   |
-  g     r
+
+|       Z   |
+        r
 |    ^      |
      r
 |    f ##   |
@@ -15,11 +15,11 @@ main.init(String.raw`
        r
 |      s    |
        r
-|   ^       |
-    b
-| oow       |
-  ggb
-|   F@      |
+|    ^      |
+     b  
+|  o w      |
+   g b 
+|   @F      |
     cc
 -------------
 

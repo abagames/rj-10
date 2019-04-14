@@ -20,6 +20,9 @@ const cursorChars = "+>nvz<N^Z";
 const interval = 15;
 let ticks = 0;
 let leftTime = 4;
+let hasGoal: boolean;
+let playerCount: number;
+let isInGame: boolean;
 
 export function init(str: string) {
   const sl = str.split("\n");
@@ -39,6 +42,9 @@ export function init(str: string) {
   sga.setActorClass(Actor);
   automaton.getActors();
   automaton.initActors();
+  hasGoal = sga.pool.get().some((a: Actor) => a.type === "goal");
+  playerCount = countPlayer();
+  isInGame = true;
   update();
 }
 
@@ -77,18 +83,38 @@ function update() {
         stickAngle = pointerAngle;
       }
     }
-    leftTime -= 15 / 60;
-    if (leftTime <= 0) {
-      leftTime = 0;
+    if (isInGame) {
+      leftTime -= 15 / 60;
+      if (leftTime <= 0) {
+        if (hasGoal) {
+          failGame();
+        } else {
+          successGame();
+        }
+        return;
+      }
+      const bl = `${leftTime > 3 ? " " : Math.ceil(leftTime)}${range(
+        Math.ceil(leftTime / 0.5)
+      )
+        .map(() => "-")
+        .join("")}`;
+      terminal.printBottom(bl);
     }
-    const bl = `${leftTime > 3 ? " " : Math.ceil(leftTime)}${range(
-      Math.ceil(leftTime / 0.5)
-    )
-      .map(() => "-")
-      .join("")}`;
-    terminal.printBottom(bl);
     view.clear();
     automaton.update();
+    if (isInGame) {
+      if (hasGoal) {
+        if (!sga.pool.get().some((a: Actor) => a.type === "goal")) {
+          successGame();
+        } else if (countPlayer() === 0) {
+          failGame();
+        }
+      } else {
+        if (countPlayer() < playerCount) {
+          failGame();
+        }
+      }
+    }
     sound.update();
     terminal.update();
     if (pointer.isPressed) {
@@ -103,4 +129,30 @@ function update() {
     stickAngle = 0;
   }
   ticks++;
+}
+
+function successGame() {
+  terminal.setBottomCharOption("l", "y");
+  terminal.printBottom("SUCCESS");
+  sound.play(0, "e>e<c>c<e>g<e>a");
+  sound.play(1, "e8>e8");
+  isInGame = false;
+}
+
+function failGame() {
+  terminal.setBottomCharOption("l", "r");
+  terminal.printBottom("FAIL");
+  sound.play(0, ">aegdc<c>c<c");
+  sound.play(1, "a8<a8");
+  isInGame = false;
+}
+
+function countPlayer() {
+  let c = 0;
+  for (let a of sga.pool.get() as Actor[]) {
+    if (a.type === "player") {
+      c++;
+    }
+  }
+  return c;
 }

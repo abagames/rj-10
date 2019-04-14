@@ -19,36 +19,37 @@ export class Actor extends sga.Actor {
   isFired = false;
   intervalRatio = 1;
 
-  update() {
+  initType() {
+    const actorTypeColors: {
+      colors: String;
+      type: ActorType;
+      priority: number;
+    }[] = [
+      { colors: "cb", type: "player", priority: 2 },
+      { colors: "rp", type: "enemy", priority: 1 },
+      { colors: "gy", type: "goal", priority: 3 }
+    ];
+    actorTypeColors.forEach(c => {
+      if (c.colors.includes(this.options.color)) {
+        this.type = c.type;
+        this.setPriority(c.priority);
+      }
+    });
     if (this.type == null) {
-      const actorTypeColors: {
-        colors: String;
-        type: ActorType;
-        priority: number;
-      }[] = [
-        { colors: "cb", type: "player", priority: 2 },
-        { colors: "rp", type: "enemy", priority: 1 },
-        { colors: "gy", type: "goal", priority: 3 }
-      ];
-      actorTypeColors.forEach(c => {
-        if (c.colors.includes(this.options.color)) {
-          this.type = c.type;
-          this.setPriority(c.priority);
-        }
-      });
-      if (this.type == null) {
-        this.type = "none";
-      }
-      for (let c of this.chars) {
-        this.size.x = Math.max(this.size.x, c.offset.x);
-        this.size.y = Math.max(this.size.y, c.offset.y);
-      }
-      this.size.x++;
-      this.size.y++;
-      this.updaterPool.get().forEach((u: sga.Updater) => {
-        u.interval = Math.ceil(u.interval * this.intervalRatio);
-      });
+      this.type = "none";
     }
+    for (let c of this.chars) {
+      this.size.x = Math.max(this.size.x, c.offset.x);
+      this.size.y = Math.max(this.size.y, c.offset.y);
+    }
+    this.size.x++;
+    this.size.y++;
+    this.updaterPool.get().forEach((u: sga.Updater) => {
+      u.interval = Math.ceil(u.interval * this.intervalRatio);
+    });
+  }
+
+  update() {
     if (this.isFired) {
       this.isFired = false;
     } else {

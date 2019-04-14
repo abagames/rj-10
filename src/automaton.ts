@@ -72,6 +72,7 @@ function initActor(a: Actor) {
       t.initFunc(u, a);
     });
   }
+  a.initType();
 }
 
 function assignActorChar(a: Actor, c: { char: string; offset: Vector }) {

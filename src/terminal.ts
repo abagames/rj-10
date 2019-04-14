@@ -124,6 +124,14 @@ export function printBottom(str: string) {
   bottomLineStr = str;
 }
 
+export function setTopCharOption(cg?: string, bg?: string, rg?: string) {
+  topCharOptions = getCharOption(cg, bg, rg);
+}
+
+export function setBottomCharOption(cg?: string, bg?: string, rg?: string) {
+  bottomCharOptions = getCharOption(cg, bg, rg);
+}
+
 function getCharFromLines(lines: string[], x: number, y: number) {
   if (lines == null) {
     return undefined;
