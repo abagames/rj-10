@@ -28,16 +28,18 @@ let charGrid: string[][];
 let colorGrid: string[][];
 let backgroundColorGrid: string[][];
 let rotationGrid: string[][];
-export const paddingTop = 1;
-export const paddingBottom = 1;
-let topLineChars = "STAGE";
-let bottomLineChars = "3-------";
 const colorChars = "lrgybpcw";
 type ColorChar = "l" | "r" | "g" | "y" | "b" | "p" | "c" | "w";
 const rotationChars = "kljhnmbvopiu9087";
 const dotCount = 6;
 const dotSize = 2;
 const letterSize = dotCount * dotSize;
+export const paddingTop = 1;
+export const paddingBottom = 1;
+let topLineStr = "";
+let bottomLineStr = "";
+let topCharOptions: CharOptions = getCharOption("l", "w");
+let bottomCharOptions: CharOptions = getCharOption("l", "w");
 
 export function init(_size: VectorLike = undefined) {
   if (_size != null) {
@@ -114,6 +116,14 @@ export function print(
   }
 }
 
+export function printTop(str: string) {
+  topLineStr = str;
+}
+
+export function printBottom(str: string) {
+  bottomLineStr = str;
+}
+
 function getCharFromLines(lines: string[], x: number, y: number) {
   if (lines == null) {
     return undefined;
@@ -186,14 +196,13 @@ export function update() {
       printChar(c, x, y, getCharOption(cg, bg, rg));
     }
   }
-  const lo = getCharOption("l", "w", undefined);
   for (let x = 0; x < size.x; x++) {
-    printChar(topLineChars.charAt(x) + " ", x, -1, lo);
-    printChar(bottomLineChars.charAt(x) + " ", x, size.y, lo);
+    printChar(topLineStr.charAt(x) + " ", x, -1, topCharOptions);
+    printChar(bottomLineStr.charAt(x) + " ", x, size.y, bottomCharOptions);
   }
 }
 
-export function getCharOption(cg: string, bg: string, rg: string) {
+export function getCharOption(cg?: string, bg?: string, rg?: string) {
   let options: CharOptions = {
     color: "w",
     backgroundColor: "l",

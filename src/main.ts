@@ -7,7 +7,7 @@ import * as sound from "./sound";
 import * as terminal from "./terminal";
 import * as automaton from "./automaton";
 import { Actor } from "./actor";
-import { wrap } from "./util/math";
+import { wrap, range } from "./util/math";
 
 export let pointer: Pointer;
 export let stickAngle = 0;
@@ -19,6 +19,7 @@ let pointerAngle = 0;
 const cursorChars = "+>nvz<N^Z";
 const interval = 15;
 let ticks = 0;
+let leftTime = 4;
 
 export function init(str: string) {
   const sl = str.split("\n");
@@ -76,6 +77,16 @@ function update() {
         stickAngle = pointerAngle;
       }
     }
+    leftTime -= 15 / 60;
+    if (leftTime <= 0) {
+      leftTime = 0;
+    }
+    const bl = `${leftTime > 3 ? " " : Math.ceil(leftTime)}${range(
+      Math.ceil(leftTime / 0.5)
+    )
+      .map(() => "-")
+      .join("")}`;
+    terminal.printBottom(bl);
     view.clear();
     automaton.update();
     sound.update();
