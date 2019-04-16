@@ -4,7 +4,7 @@ import colorShift from "./glfx/shader/colorshift";
 import * as gcc from "gif-capture-canvas";
 import { Vector, VectorLike } from "./util/vector";
 
-export const size = new Vector(216, 216);
+export const size = new Vector();
 export let fxCanvas;
 export let canvas: HTMLCanvasElement;
 export let context: CanvasRenderingContext2D;
@@ -13,16 +13,22 @@ const isCapturing = false;
 let captureCanvas: HTMLCanvasElement;
 let captureContext: CanvasRenderingContext2D;
 let texture;
-let ticks = 0;
+//let ticks = 0;
 
-export function init(_size: VectorLike = undefined) {
-  if (_size != null) {
-    size.set(_size);
-  }
+export function init() {
   fxCanvas = fx.canvas();
   fxCanvas.colorShift = fx.wrap(colorShift);
   //fxCanvas.scanlines = fx.wrap(scanlines);
   fxCanvas.classList.add("centering");
+  canvas = document.createElement("canvas");
+  context = canvas.getContext("2d");
+  context.imageSmoothingEnabled = false;
+  texture = fxCanvas.texture(canvas);
+  document.body.appendChild(fxCanvas);
+}
+
+export function setSize(_size: VectorLike) {
+  size.set(_size);
   if (size.x > size.y) {
     fxCanvas.style.width = "95vmin";
     fxCanvas.style.height = `${(95 * size.y) / size.x}vmin`;
@@ -30,13 +36,8 @@ export function init(_size: VectorLike = undefined) {
     fxCanvas.style.width = `${(95 * size.x) / size.y}vmin`;
     fxCanvas.style.height = "95vmin";
   }
-  canvas = document.createElement("canvas");
   canvas.width = size.x;
   canvas.height = size.y;
-  context = canvas.getContext("2d");
-  context.imageSmoothingEnabled = false;
-  texture = fxCanvas.texture(canvas);
-  document.body.appendChild(fxCanvas);
   if (isCapturing) {
     captureCanvas = document.createElement("canvas");
     const cw = size.y * 2;
@@ -71,5 +72,5 @@ export function update() {
     );
     gcc.capture(captureCanvas);
   }
-  ticks++;
+  //ticks++;
 }

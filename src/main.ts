@@ -13,39 +13,59 @@ export let pointer: Pointer;
 export let stickAngle = 0;
 let lastFrameTime = 0;
 let isPrevStickPressed = false;
-let centerPos: Vector;
+let centerPos = new Vector();
 let offsetFromCenter = new Vector();
 let pointerAngle = 0;
 const cursorChars = "+>nvz<N^Z";
 const interval = 15;
 let ticks = 0;
-let leftTime = 4;
+let leftTime: number;
 let hasGoal: boolean;
 let playerCount: number;
 let isInGame: boolean;
+let isSucceeded: boolean;
+let levels: string[];
+let currentLevel = 0;
 
-export function init(str: string) {
+export function init(_levels: string[]) {
+  levels = _levels;
+  view.init();
+  keyboard.init({ onKeyDown: sound.resumeAudioContext });
+  initPointer(sound.resumeAudioContext);
+  pointer = new Pointer(view.fxCanvas, false, new Vector(0.5, 0.5));
+  terminal.init();
+  sga.setActorClass(Actor);
+  startLevel();
+  update();
+}
+
+function startLevel() {
+  parseLevel(levels[currentLevel]);
+}
+
+function parseLevel(str: string) {
   const sl = str.split("\n");
   const sx = Math.max(...sl.map(l => l.length));
   const sy = (sl.length - 2) / 2;
   const size = new Vector(sx, sy);
-  view.init({
+  view.setSize({
     x: (size.x + 2) * 6 * 2,
     y: (size.y + 2 + terminal.paddingTop + terminal.paddingBottom) * 6 * 2
   });
-  centerPos = new Vector(view.size.x / 2, view.size.y / 2);
-  keyboard.init({ onKeyDown: sound.resumeAudioContext });
-  initPointer(sound.resumeAudioContext);
-  pointer = new Pointer(view.fxCanvas, view.size, false, new Vector(0.5, 0.5));
-  terminal.init(size);
+  centerPos.set(view.size.x / 2, view.size.y / 2);
+  pointer.setSize(view.size);
+  terminal.setSize(size);
   terminal.printWithColor(str);
-  sga.setActorClass(Actor);
+  sga.reset();
   automaton.getActors();
   automaton.initActors();
   hasGoal = sga.pool.get().some((a: Actor) => a.type === "goal");
   playerCount = countPlayer();
   isInGame = true;
-  update();
+  leftTime = 4;
+  terminal.setTopCharOption("l", "w");
+  terminal.setBottomCharOption("l", "w");
+  terminal.printTop(`LEVEL ${currentLevel + 1}`);
 }
 
 function update() {
@@ -83,22 +103,22 @@ function update() {
         stickAngle = pointerAngle;
       }
     }
+    leftTime -= 15 / 60;
     if (isInGame) {
-      leftTime -= 15 / 60;
       if (leftTime <= 0) {
         if (hasGoal) {
           failGame();
         } else {
           successGame();
         }
-        return;
+      } else {
+        const bl = `${leftTime > 3 ? " " : Math.ceil(leftTime)}${range(
+          Math.ceil(leftTime / 0.5)
+        )
+          .map(() => "-")
+          .join("")}`;
+        terminal.printBottom(bl);
       }
-      const bl = `${leftTime > 3 ? " " : Math.ceil(leftTime)}${range(
-        Math.ceil(leftTime / 0.5)
-      )
-        .map(() => "-")
-        .join("")}`;
-      terminal.printBottom(bl);
     }
     view.clear();
     automaton.update();
@@ -116,6 +136,11 @@ function update() {
       }
     }
     sound.update();
+    if (!isInGame && leftTime < -1) {
+      terminal.clear();
+      terminal.setTopCharOption("l", "l");
+      terminal.setBottomCharOption("l", "l");
+    }
     terminal.update();
     if (pointer.isPressed) {
       view.context.drawImage(
@@ -127,16 +152,25 @@ function update() {
     view.update();
     isPrevStickPressed = stickAngle > 0;
     stickAngle = 0;
+    if (!isInGame && leftTime < -1) {
+      if (isSucceeded) {
+        currentLevel = wrap(currentLevel + 1, 0, levels.length);
+      }
+      startLevel();
+    }
   }
   ticks++;
 }
 
+// cSpell: disable
 function successGame() {
   terminal.setBottomCharOption("l", "y");
   terminal.printBottom("SUCCESS");
   sound.play(0, "e>e<c>c<e>g<e>a");
   sound.play(1, "e8>e8");
   isInGame = false;
+  isSucceeded = true;
+  leftTime = 0;
 }
 
 function failGame() {
@@ -145,7 +179,10 @@ function failGame() {
   sound.play(0, ">aegdc<c>c<c");
   sound.play(1, "a8<a8");
   isInGame = false;
+  isSucceeded = false;
+  leftTime = 0;
 }
+// cSpell: enable
 
 function countPlayer() {
   let c = 0;

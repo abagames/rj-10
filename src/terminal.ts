@@ -20,7 +20,7 @@ const rgbObjects = rgbNumbers.map(n => {
     b: n & 0xff
   };
 });
-export let size = new Vector(16, 16);
+export let size = new Vector();
 export let letterImages: HTMLImageElement[];
 let letterCanvas: HTMLCanvasElement;
 let letterContext: CanvasRenderingContext2D;
@@ -41,20 +41,21 @@ let bottomLineStr = "";
 let topCharOptions: CharOptions = getCharOption("l", "w");
 let bottomCharOptions: CharOptions = getCharOption("l", "w");
 
-export function init(_size: VectorLike = undefined) {
-  if (_size != null) {
-    size.set(_size);
-  }
+export function init() {
+  letterCanvas = document.createElement("canvas");
+  letterCanvas.width = letterCanvas.height = letterSize;
+  letterContext = letterCanvas.getContext("2d");
+  letterImages = letterPatterns.map(lp => createLetterImages(lp));
+}
+
+export function setSize(_size: VectorLike) {
+  size.set(_size);
   charGrid = range(size.x).map(() => range(size.y).map(() => undefined));
   colorGrid = range(size.x).map(() => range(size.y).map(() => undefined));
   backgroundColorGrid = range(size.x).map(() =>
     range(size.y).map(() => undefined)
   );
   rotationGrid = range(size.x).map(() => range(size.y).map(() => undefined));
-  letterCanvas = document.createElement("canvas");
-  letterCanvas.width = letterCanvas.height = letterSize;
-  letterContext = letterCanvas.getContext("2d");
-  letterImages = letterPatterns.map(lp => createLetterImages(lp));
 }
 
 export function printWithColor(str: string) {

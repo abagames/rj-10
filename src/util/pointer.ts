@@ -11,6 +11,7 @@ export class Pointer {
   isJustPressed = false;
 
   pixelSize: Vector;
+  padding = new Vector();
   prevPos = new Vector();
   debugRandom = new Random();
   debugPos = new Vector();
@@ -19,17 +20,18 @@ export class Pointer {
 
   constructor(
     public screen: HTMLElement,
-    _pixelSize: Vector,
     public isDebugMode = false,
-    public anchor: Vector = new Vector(),
-    public padding: Vector = new Vector()
-  ) {
+    public anchor: Vector = new Vector()
+  ) {}
+
+  setSize(_pixelSize: Vector, _padding = new Vector()) {
+    this.padding.set(_padding);
     this.pixelSize = new Vector(
-      _pixelSize.x + padding.x * 2,
-      _pixelSize.y + padding.y * 2
+      _pixelSize.x + _padding.x * 2,
+      _pixelSize.y + _padding.y * 2
     );
     this.targetPos.set(this.pixelSize.x / 2, this.pixelSize.y / 2);
-    if (isDebugMode) {
+    if (this.isDebugMode) {
       this.debugPos.set(this.pixelSize.x / 2, this.pixelSize.y / 2);
     }
   }

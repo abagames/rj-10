@@ -1,6 +1,25 @@
 import * as main from "../main";
 
-main.init(String.raw`
+main.init([
+  String.raw`
+Move:
+
+Arrow or 
+
+[WASD] keys
+
+###########
+
+#         #
+
+# @     o #
+  c     y
+#         #
+
+###########
+
+`,
+  String.raw`
 -------------
 
 |    /     \|
@@ -23,4 +42,5 @@ main.init(String.raw`
     cc
 -------------
 
-`);
+`
+]);
