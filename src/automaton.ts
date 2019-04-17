@@ -172,8 +172,7 @@ function arrow(a: Actor, u: any) {
     }
     ai = wrap(ai, 0, 8);
     a.setChar(arrowChars.charAt(ai), u.offset);
-    play(0, "a<a>a");
-    play(1, "g8.");
+    play(2, "a<a>a");
   } else {
     play(2, "e");
   }
@@ -213,10 +212,10 @@ function operated(a: Actor) {
   const o = angleOffsets[stickAngle - 1];
   a.pos.add({ x: o[0], y: o[1] });
   if (isEmpty(a.getTerminalChars())) {
-    play(0, "e");
+    play(0, "<e");
     return;
   }
-  play(0, "b");
+  play(0, "<b");
   if (a.isWeak) {
     this.remove();
     return;
@@ -268,8 +267,7 @@ function fire(a: Actor, u) {
     initActor(sa);
     sa.isFired = true;
   });
-  play(0, "b<b");
-  play(1, "e16");
+  play(1, "b<b");
 }
 
 function weakInit(u, a: Actor) {
