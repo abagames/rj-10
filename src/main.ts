@@ -28,19 +28,19 @@ let levels: string[];
 let currentLevel = 0;
 
 export type Options = {
-  isTestingSpecificLevel: number;
+  testingLevel: number;
 };
 let options: Options;
 
 const defaultOptions: Options = {
-  isTestingSpecificLevel: undefined
+  testingLevel: undefined
 };
 
 export function init(_levels: string[], _options?: Options) {
   options = { ...defaultOptions, ..._options };
   levels = _levels;
-  if (options.isTestingSpecificLevel != null) {
-    currentLevel = wrap(options.isTestingSpecificLevel, 0, levels.length);
+  if (options.testingLevel != null) {
+    currentLevel = wrap(options.testingLevel, 0, levels.length);
   }
   view.init();
   keyboard.init({ onKeyDown: sound.resumeAudioContext });
@@ -166,7 +166,7 @@ function update() {
     isPrevStickPressed = stickAngle > 0;
     stickAngle = 0;
     if (!isInGame && leftTime < -1) {
-      if (isSucceeded && options.isTestingSpecificLevel == null) {
+      if (isSucceeded && options.testingLevel == null) {
         currentLevel = wrap(currentLevel + 1, 0, levels.length);
       }
       startLevel();
