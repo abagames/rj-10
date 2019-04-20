@@ -17,6 +17,11 @@ const defaultLength = 32;
 Tone.Transport.start();
 
 export function play(synthNumber: number, mml: string) {
+  if (mmls[synthNumber] != null) {
+    if (mml.length < mmls[synthNumber].length) {
+      return;
+    }
+  }
   mmls[synthNumber] = mml;
 }
 
