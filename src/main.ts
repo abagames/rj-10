@@ -62,7 +62,7 @@ function parseLevel(str: string) {
   hasGoal = sga.pool.get().some((a: Actor) => a.type === "goal");
   playerCount = countPlayer();
   isInGame = true;
-  leftTime = 4;
+  leftTime = 10;
   terminal.setTopCharOption("l", "w");
   terminal.setBottomCharOption("l", "w");
   terminal.printTop(`LEVEL ${currentLevel + 1}`);
@@ -112,8 +112,8 @@ function update() {
           successGame();
         }
       } else {
-        const bl = `${leftTime > 3 ? " " : Math.ceil(leftTime)}${range(
-          Math.ceil(leftTime / 0.5)
+        const bl = `${leftTime > 9 ? " " : Math.ceil(leftTime)}${range(
+          Math.ceil(leftTime)
         )
           .map(() => "-")
           .join("")}`;
