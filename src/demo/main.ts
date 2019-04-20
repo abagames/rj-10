@@ -1,7 +1,8 @@
 import * as main from "../main";
 
-main.init([
-  String.raw`
+main.init(
+  [
+    String.raw`
 Move:
 
 Arrow
@@ -21,7 +22,7 @@ Slide
 ###########
 
 `,
-  String.raw`
+    String.raw`
 ###########
 
 #   *     #
@@ -33,7 +34,7 @@ Slide
 ###########
 
 `,
-  String.raw`
+    String.raw`
 -----------
 
 |  v   v o|
@@ -49,7 +50,7 @@ Slide
 -----------
 
 `,
-  String.raw`
+    String.raw`
 -----
 
 |@  |
@@ -73,7 +74,7 @@ Slide
     -----
 
 `,
-  String.raw`
+    String.raw`
   ########
 
   #R    o#
@@ -93,7 +94,7 @@ Slide
 #######
 
 `,
-  String.raw`
+    String.raw`
 #Fs####
  rr
 #v# #@#
@@ -113,7 +114,7 @@ Slide
 ###Fs##
    rr
 `,
-  String.raw`
+    String.raw`
  >
  g
         <
@@ -129,7 +130,7 @@ Slide
 TTTTTTTTTTT
 
 `,
-  String.raw`
+    String.raw`
 -----------
 
 |         |
@@ -151,7 +152,7 @@ TTTTTTTTTTT
 -----------
 
 `,
-  String.raw`
+    String.raw`
 @
 g
     @
@@ -169,7 +170,7 @@ g
        @
        g
 `,
-  String.raw`
+    String.raw`
 [][][][][][][]
 
 [            ]
@@ -191,7 +192,7 @@ g
 [][][][][][][]
 
 `,
-  String.raw`
+    String.raw`
 <    <    <
 r    r    r
 | @       |
@@ -213,7 +214,7 @@ r    r    r
 HHHHHHHHHHHHHH
 
 `,
-  String.raw`
+    String.raw`
 -----
 
 |@  |------
@@ -235,7 +236,7 @@ HHHHHHHHHHHHHH
      -------
 
 `,
-  String.raw`
+    String.raw`
      -|-|---
 
  -----     |
@@ -255,7 +256,7 @@ HHHHHHHHHHHHHH
 ------
 
 `,
-  String.raw`
+    String.raw`
 -------
 
 v     
@@ -277,8 +278,10 @@ ggg
 &&&&&&&
 ccccccc
 `
-  /*
+    /*
   ,String.raw`
 `,
 */
-]);
+  ],
+  { isTestingSpecificLevel: -1 }
+);
