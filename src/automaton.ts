@@ -106,6 +106,7 @@ function checkConnecting(
   }
   terminal.setCharAt(x, y, undefined);
   return [{ char: c.char, offset: new Vector(ox, oy) }]
+    .concat(checkConnecting(x - 1, y, ox - 1, oy, color))
     .concat(checkConnecting(x, y - 1, ox, oy - 1, color))
     .concat(checkConnecting(x + 1, y, ox + 1, oy, color))
     .concat(checkConnecting(x, y + 1, ox, oy + 1, color));

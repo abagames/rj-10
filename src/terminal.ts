@@ -164,11 +164,13 @@ export type CharOptions = {
 };
 
 export function setCharAt(
-  x: number,
-  y: number,
+  _x: number,
+  _y: number,
   char: string,
   options?: CharOptions
 ) {
+  const x = wrap(_x, 0, size.x);
+  const y = wrap(_y, 0, size.y);
   charGrid[x][y] = char;
   if (options == null) {
     colorGrid[x][y] = backgroundColorGrid[x][y] = rotationGrid[x][
