@@ -141,8 +141,10 @@ export class Actor extends sga.Actor {
     return this.chars.some(c =>
       other.chars.some(
         oc =>
-          this.pos.x + c.offset.x === other.pos.x + oc.offset.x &&
-          this.pos.y + c.offset.y === other.pos.y + oc.offset.y
+          wrap(this.pos.x + c.offset.x, 0, terminal.size.x) ===
+            wrap(other.pos.x + oc.offset.x, 0, terminal.size.x) &&
+          wrap(this.pos.y + c.offset.y, 0, terminal.size.y) ===
+            wrap(other.pos.y + oc.offset.y, 0, terminal.size.y)
       )
     );
   }
@@ -152,8 +154,10 @@ export class Actor extends sga.Actor {
       .map(c =>
         other.chars
           .map(oc =>
-            this.pos.x + offset.x + c.offset.x === other.pos.x + oc.offset.x &&
-            this.pos.y + offset.y + c.offset.y === other.pos.y + oc.offset.y
+            wrap(this.pos.x + offset.x + c.offset.x, 0, terminal.size.x) ===
+              wrap(other.pos.x + oc.offset.x, 0, terminal.size.x) &&
+            wrap(this.pos.y + offset.y + c.offset.y, 0, terminal.size.y) ===
+              wrap(other.pos.y + oc.offset.y, 0, terminal.size.y)
               ? oc.char
               : undefined
           )
@@ -165,7 +169,10 @@ export class Actor extends sga.Actor {
   testCollisionWithPosition(pos: VectorLike) {
     return this.chars.some(
       c =>
-        this.pos.x + c.offset.x === pos.x && this.pos.y + c.offset.y === pos.y
+        wrap(this.pos.x + c.offset.x, 0, terminal.size.x) ===
+          wrap(pos.x, 0, terminal.size.x) &&
+        wrap(this.pos.y + c.offset.y, 0, terminal.size.y) ===
+          wrap(pos.y, 0, terminal.size.y)
     );
   }
 
