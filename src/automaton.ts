@@ -198,11 +198,11 @@ function rotate(a: Actor, u, rotateAngle: number) {
     const ie = isEmpty(a.getTerminalChars(ofs));
     if (ie) {
       a.pos.add(ofs);
+      play(2, i === 0 ? "a" : "d");
       break;
     }
     u.angle = wrap(u.angle - rotateAngle, 0, 8);
   }
-  play(2, "d");
 }
 
 function operated(a: Actor) {

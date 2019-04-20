@@ -129,7 +129,9 @@ export class Actor extends sga.Actor {
     const ac = sga.pool
       .get()
       .map((o: Actor) =>
-        o === this || o.type !== "goal" ? undefined : this.getCollidingChars(o)
+        o === this || o.type !== "goal"
+          ? undefined
+          : this.getCollidingChars(o, offset)
       )
       .join("");
     return tc + ac;
@@ -145,13 +147,13 @@ export class Actor extends sga.Actor {
     );
   }
 
-  getCollidingChars(other: Actor) {
+  getCollidingChars(other: Actor, offset: VectorLike) {
     return this.chars
       .map(c =>
         other.chars
           .map(oc =>
-            this.pos.x + c.offset.x === other.pos.x + oc.offset.x &&
-            this.pos.y + c.offset.y === other.pos.y + oc.offset.y
+            this.pos.x + offset.x + c.offset.x === other.pos.x + oc.offset.x &&
+            this.pos.y + offset.y + c.offset.y === other.pos.y + oc.offset.y
               ? oc.char
               : undefined
           )
