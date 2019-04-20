@@ -4,9 +4,11 @@ main.init([
   String.raw`
 Move:
 
-Arrow or 
+Arrow
 
 [WASD] keys
+
+Slide
 
 ###########
 
@@ -20,27 +22,264 @@ Arrow or
 
 `,
   String.raw`
--------------
+###########
 
-|    /     \|
+#   *     #
+    r
+# @ * * o #
+  c r r y
+#     *   #
+      r
+###########
 
-|       Z   |
+`,
+  String.raw`
+-----------
+
+|  v   v o|
+   r   r g
+|         |
+
+|         |
+
+|         |
+
+|@   ^    |
+ c   r
+-----------
+
+`,
+  String.raw`
+-----
+
+|@  |
+ c
+|   |
+
+|   -----
+
+|   | > |
+    g r
+| < |   |
+  r g
+|   | < |
+    g r
+-----   |
+
+    |   |
+
+    |  o|
+       y
+    -----
+
+`,
+  String.raw`
+  ########
+
+  #R    o#
+   r    y
+  # ##   #
+
+  #   L###
+      r
+###L o##
+   r y
+# R   #
+  r
+# ### #
+
+#@    #
+ c
+#######
+
+`,
+  String.raw`
+#Fs####
+ rr
+#v# #@#
+ p   c
+#   # #
+
+# # # #
+
+# #   #
+
+# # # #
+
+# # # #
+
+#o#^# #
+ y p
+###Fs##
+   rr
+`,
+  String.raw`
+ >
+ g
+        <
+        g
+    >
+    g
+
+
+ .^.^. . .
+  b b
+  F@F
+  ccc
+TTTTTTTTTTT
+
+`,
+  String.raw`
+-----------
+
+|         |
+
+|  >      |
+   r
+|   Z     |
+    r
+|       < |
         r
-|    ^      |
-     r
-|    f ##   |
-     r
-|      R#   |
-       r
-|      s    |
-       r
-|    ^      |
-     b  
-|  o w      |
-   g b 
-|   @F      |
-    cc
--------------
+|     z   |
+      r
+|  >      |
+   r
+|   n     |
+    r
+| @  < N  |
+  c  r r
+-----------
 
+`,
+  ,
+  String.raw`
+@
+g
+    @
+    g
+
+
+        @
+        g
+    &
+    c
+ @
+ g
+      
+
+       @
+       g
+`,
+  String.raw`
+[][][][][][][]
+
+[            ]
+
+[          @ ]
+           c
+[            ]
+   
+[ H          ]
+  r
+[HHHRfHHH    ]
+ rrrrrrrr
+[H  H# #H    ]
+ r  r   r
+[H  H   H    ]
+ r  r   r
+[o  H   H    ]
+ y  r   r
+[][][][][][][]
+
+`,
+  String.raw`
+<    <    <
+r    r    r
+| @       |
+r c       r
+| v       |
+r c       r
+|         |
+r         r
+     <    |
+     r    r
+     |
+     r
+     |
+     r
+<    |    
+r    r    
+|    |    <
+r    r    r
+HHHHHHHHHHHHHH
+
+`,
+  String.raw`
+-----
+
+|@  |------
+ c
+|  <|    <|
+   rg    r
+------| |--
+
+      | |
+
+     -|-|---
+       g
+     -     |
+
+     |  Z  |
+        r
+     -    o|
+          y
+     -------
+
+`,
+  String.raw`
+     -|-|---
+
+ -----     |
+
+ |  <|  Z  |
+    rg  r
+ | |--    @|
+          c
+ | | -------
+
+-|-|--
+  g
+|   n|
+    r
+| ^ o|
+  r y
+------
+
+`,
+  String.raw`
+-------
+
+v     
+r     
+      s
+      g
+  ^  vs
+  r  rg
+      v
+      g
+v
+r
+    ^
+    r
+---
+ggg
+ @
+ g
+&&&&&&&
+ccccccc
 `
+  /*
+  ,String.raw`
+`,
+*/
 ]);
