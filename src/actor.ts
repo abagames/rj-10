@@ -17,7 +17,7 @@ export class Actor extends sga.Actor {
   connecting: CharPart[];
   isWeak = false;
   isFired = false;
-  intervalRatio = 1;
+  intervalChangeOffsets: { offset: VectorLike; ratio: number }[] = [];
 
   initType() {
     const actorTypeColors: {
@@ -45,8 +45,13 @@ export class Actor extends sga.Actor {
     }
     this.size.x++;
     this.size.y++;
-    this.updaterPool.get().forEach((u: sga.Updater) => {
-      u.interval = Math.ceil(u.interval * this.intervalRatio);
+    this.updaterPool.get().forEach((u: any) => {
+      const o = u.offset;
+      this.intervalChangeOffsets.forEach(co => {
+        if (Math.abs(o.x - co.offset.x) + Math.abs(o.y - co.offset.y) === 1) {
+          u.interval = Math.ceil(u.interval * co.ratio);
+        }
+      });
     });
   }
 

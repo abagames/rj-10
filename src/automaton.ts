@@ -276,11 +276,11 @@ function weakInit(u, a: Actor) {
 }
 
 function slowInit(u, a: Actor) {
-  a.intervalRatio *= 2;
+  a.intervalChangeOffsets.push({ offset: u.offset, ratio: 2 });
 }
 
 function fastInit(u, a: Actor) {
-  a.intervalRatio /= 2;
+  a.intervalChangeOffsets.push({ offset: u.offset, ratio: 0.5 });
 }
 
 function isEmpty(cs: string) {

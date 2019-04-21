@@ -277,6 +277,28 @@ HHHHHHHHHHHHHH
   a
 &&&&&&&&
 cccccccc
+`,
+    String.raw`
+*          *
+r          r
+*^|        *
+raa        r
+* |        *
+r a        r
+*        |^*
+r        aar
+*          *
+r          r
+*    s@    *
+r    cc    r
+*    f>    *
+r    cc    r
+*^|        *
+raa        r
+*        |^*
+r        aar
+*        | *
+r        a r
 `
     /*
   ,String.raw`

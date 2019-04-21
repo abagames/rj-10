@@ -10,5 +10,5 @@ Text based games.
 - [x] slow interval
 - [x] Game success/fail
 - [x] Add wall actor
-- [ ] Slow/Fast only affects next updater
+- [x] Slow/Fast only affects next updater
 - [ ] Add levels
