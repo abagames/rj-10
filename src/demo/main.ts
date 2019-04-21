@@ -299,6 +299,160 @@ raa        r
 r        aar
 *        | *
 r        a r
+`,
+    String.raw`
+    #######
+
+    #/  <\#
+        r
+    #  #  #
+   
+    #-###-#
+     y   y
+#####  #  #
+
+#/ | v  >/#
+   y r  r
+#v #  #####
+ r
+# ### #
+
+#  #  #
+
+#\@  /#
+  c
+#######
+
+`,
+    String.raw`
+/        \
+
+\   vf > /
+    cc r
+/ < @s   \
+  r cc
+\        /
+
+/  <     \
+   r
+\        /
+
+/     >  \
+      r
+\        /
+
+/    <   \
+     r
+\        /
+
+`,
+    String.raw`
++++++++++
+
++       +
+
++ == ==L+
+       r
++ ==&== +
+    c
++  &@&  +
+   cac
++R==&== +
+ r  c
++ == == +
+        
++       +
+    
++++++++++
+
+`,
+    String.raw`
+.|. . . .
+ r
+ v
+ r
+       ^
+       r
+       |
+       r
+
+
+---- ---@
+cccc cccc
+
+
+
+
+
+
+`,
+    String.raw`
+---------
+
+       v
+       r
+N   ^ 
+r   r
+      Z
+      r
+ ^
+ r
+
+
+   @  @
+   c  c
+---------
+
+`,
+    String.raw`
+  ()()()()()()
+
+  ()  o o   ()
+      g g
+            ()
+
+            ()
+
+     /@     ()
+     aa       
+F>   \      ()
+cb   aa      
+v           ()
+c            
+F>          ()
+cb
+            ()
+
+  () o   o  ()
+     g   g
+  ()()()()()()
+
+`,
+    String.raw`
+**************
+pppppppppppppp
+*  vf****    *
+p  rrrrrr    p
+* o          *
+p y          p
+*    ^f*   < *
+p    rrr   r p
+*          * *
+p          r p
+*>   >     * *
+pr   r     r p
+*f   *     * *
+pr   r     r p
+**           *
+pr           p
+**  @        *
+pr  c        p
+*          o *
+p          y p
+*    ****^   *
+p    rrrrr   p
+**************
+pppppppppppppp
 `
     /*
   ,String.raw`
