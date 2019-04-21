@@ -4,7 +4,7 @@ import * as terminal from "./terminal";
 import { wrap } from "./util/math";
 import { play } from "./sound";
 
-type ActorType = "player" | "enemy" | "goal" | "none";
+type ActorType = "player" | "enemy" | "goal" | "wall" | "none";
 type CharPart = { char: string; offset: Vector };
 
 export class Actor extends sga.Actor {
@@ -27,7 +27,8 @@ export class Actor extends sga.Actor {
     }[] = [
       { colors: "cb", type: "player", priority: 2 },
       { colors: "rp", type: "enemy", priority: 1 },
-      { colors: "gy", type: "goal", priority: 3 }
+      { colors: "gy", type: "goal", priority: 3 },
+      { colors: "a", type: "wall", priority: 4 }
     ];
     actorTypeColors.forEach(c => {
       if (c.colors.includes(this.options.color)) {
@@ -82,11 +83,12 @@ export class Actor extends sga.Actor {
         if (a.type === "enemy") {
           this.remove();
           play(3, "crcrc");
-        } else {
+          a.remove();
+        } else if (a.type === "goal") {
           play(0, ">gbdb");
           play(1, ">g4");
+          a.remove();
         }
-        a.remove();
       }
     });
   }
@@ -123,15 +125,15 @@ export class Actor extends sga.Actor {
           ).char
       )
       .join("");
-    if (this.type === "player") {
-      return tc;
-    }
     const ac = sga.pool
       .get()
       .map((o: Actor) =>
-        o === this || o.type !== "goal"
-          ? undefined
-          : this.getCollidingChars(o, offset)
+        (o !== this &&
+          (this.type !== "player" &&
+            (o.type === "goal" || o.type === "wall"))) ||
+        (this.type === "player" && o.type === "wall")
+          ? this.getCollidingChars(o, offset)
+          : undefined
       )
       .join("");
     return tc + ac;

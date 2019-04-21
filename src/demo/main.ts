@@ -257,26 +257,26 @@ HHHHHHHHHHHHHH
 
 `,
     String.raw`
--------
+--------
 
-v     
-r     
-      s
-      g
-  ^  vs
-  r  rg
-      v
-      g
-v
-r
-    ^
-    r
----
-ggg
- @
- g
-&&&&&&&
-ccccccc
+ v     
+ r     
+      
+      
+   ^  v
+   r  r
+      
+      
+ v
+ r
+     ^
+     r
+ ---
+ aaa
+  @
+  a
+&&&&&&&&
+cccccccc
 `
     /*
   ,String.raw`

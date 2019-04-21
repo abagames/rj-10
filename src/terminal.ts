@@ -11,6 +11,7 @@ const rgbNumbers = [
   0x3f51b5,
   0x9c27b0,
   0x03a9f4,
+  0xaaaaaa,
   0xeeeeee
 ];
 const rgbObjects = rgbNumbers.map(n => {
@@ -28,8 +29,8 @@ let charGrid: string[][];
 let colorGrid: string[][];
 let backgroundColorGrid: string[][];
 let rotationGrid: string[][];
-const colorChars = "lrgybpcw";
-type ColorChar = "l" | "r" | "g" | "y" | "b" | "p" | "c" | "w";
+const colorChars = "lrgybpcaw";
+type ColorChar = "l" | "r" | "g" | "y" | "b" | "p" | "c" | "a" | "w";
 const rotationChars = "kljhnmbvopiu9087";
 const dotCount = 6;
 const dotSize = 2;
