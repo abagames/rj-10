@@ -71,7 +71,9 @@ function getPart(synth, mml: string, isNoise: boolean) {
 }
 
 export function resumeAudioContext() {
-  Tone.context.resume();
+  if (Tone.context.state === "suspended") {
+    Tone.context.resume();
+  }
 }
 
 function getSynthParams(type: string) {

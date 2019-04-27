@@ -137,10 +137,10 @@ let cursorPos = new Vector(-9999, -9999);
 let isDown = false;
 let isClicked = false;
 let isResettingTargetPos = false;
-let onPointerUp: Function | undefined;
+let onPointerDownOrUp: Function | undefined;
 
-export function init(_onPointerUp?: Function) {
-  onPointerUp = _onPointerUp;
+export function init(_onPointerDownOrUp?: Function) {
+  onPointerDownOrUp = _onPointerDownOrUp;
   document.addEventListener("mousedown", e => {
     onDown(e.pageX, e.pageY);
   });
@@ -180,6 +180,9 @@ function onDown(x: number, y: number) {
   cursorPos.set(x, y);
   isDown = isClicked = true;
   isResettingTargetPos = false;
+  if (onPointerDownOrUp != null) {
+    onPointerDownOrUp();
+  }
 }
 
 function onMove(x: number, y: number) {
@@ -192,7 +195,7 @@ function onMove(x: number, y: number) {
 function onUp(e: Event) {
   isDown = false;
   isResettingTargetPos = false;
-  if (onPointerUp != null) {
-    onPointerUp();
+  if (onPointerDownOrUp != null) {
+    onPointerDownOrUp();
   }
 }
