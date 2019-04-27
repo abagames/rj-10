@@ -3,8 +3,14 @@ import MMLIterator from "mml-iterator";
 import { range } from "./util/math";
 
 export const synths = [
-  new Tone.Synth(getSynthParams("pulse")).toMaster(),
-  new Tone.Synth(getSynthParams("square")).toMaster(),
+  new Tone.Synth(getSynthParams("pulse")).chain(
+    new Tone.Volume(-12),
+    Tone.Master
+  ),
+  new Tone.Synth(getSynthParams("square")).chain(
+    new Tone.Volume(-12),
+    Tone.Master
+  ),
   new Tone.Synth(getSynthParams("triangle")).toMaster(),
   new Tone.NoiseSynth().toMaster()
 ];
