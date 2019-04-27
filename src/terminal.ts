@@ -89,9 +89,9 @@ export function print(
       : undefined;
   let str = _str;
   if (options.charAndColorPattern != null) {
-    const cc = options.charAndColorPattern.split("\n");
-    str = cc.filter((l, i) => i % 2 === 1).join("\n");
-    colorLines = cc.filter((l, i) => i > 0 && i % 2 === 0);
+    const [_lines, _colorLines] = getColorLines(options.charAndColorPattern);
+    str = _lines.join("\n");
+    colorLines = _colorLines;
   }
   let lx = 0;
   let ly = 0;
@@ -116,6 +116,36 @@ export function print(
     x++;
     lx++;
   }
+}
+
+export function getColorLines(str: string) {
+  const _cc = str.split("\n");
+  const cc = _cc.slice(1, _cc.length - 1);
+  const lines = [];
+  const colorLines = [];
+  let isNormalLine = true;
+  for (const l of cc) {
+    if (isNormalLine) {
+      lines.push(l);
+      isNormalLine = false;
+      continue;
+    }
+    if (isColorLine(l)) {
+      colorLines.push(l);
+      isNormalLine = true;
+    } else {
+      lines.push(l);
+      colorLines.push("");
+    }
+  }
+  return [lines, colorLines];
+}
+
+export function isColorLine(line: string) {
+  return (
+    line.trim().length > 0 &&
+    line.replace(new RegExp(`[\\s${colorChars}]`, "g"), "").length === 0
+  );
 }
 
 export function printTop(str: string) {

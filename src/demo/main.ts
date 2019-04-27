@@ -1,30 +1,22 @@
 import * as main from "../main";
 
+// cSpell: disable
 main.init(
   [
     String.raw`
 Move:
-
 Arrow
-
 [WASD] keys
-
 Slide
-
 ###########
-
 #         #
-
 # @     o #
   c     y
 #         #
-
 ###########
-
 `,
     String.raw`
 ###########
-
 #   *     #
     r
 # @ * * o #
@@ -32,33 +24,24 @@ Slide
 #     *   #
       r
 ###########
-
 `,
     String.raw`
 -----------
-
 |  v   v o|
    r   r g
 |         |
-
 |         |
-
 |         |
-
 |@   ^    |
  c   r
 -----------
-
 `,
     String.raw`
 -----
-
 |@  |
  c
 |   |
-
 |   -----
-
 |   | > |
     g r
 | < |   |
@@ -66,21 +49,16 @@ Slide
 |   | < |
     g r
 -----   |
-
     |   |
-
     |  o|
        y
     -----
-
 `,
     String.raw`
   ########
-
   #R    o#
    r    y
   # ##   #
-
   #   L###
       r
 ###L o##
@@ -88,11 +66,31 @@ Slide
 # R   #
   r
 # ### #
-
 #@    #
  c
 #######
-
+`,
+    String.raw`
+|-------------|
+|             |
+|             |
+|      ^      |
+       r
+|     Of      |
+      rr
+|     ---O    |
+      rrrr
+|    O-|-O    |
+     rrrrr
+|   F-----F   |
+    rrrrrrr
+|   v  |  v   |
+    p  r  p
+|      |      |
+       r
+| @    |    $ |
+  c    r    y
+|++++++-++++++|
 `,
     String.raw`
 #Fs####
@@ -100,15 +98,10 @@ Slide
 #v# #@#
  p   c
 #   # #
-
 # # # #
-
 # #   #
-
 # # # #
-
 # # # #
-
 #o#^# #
  y p
 ###Fs##
@@ -122,19 +115,15 @@ Slide
     >
     g
 
-
  .^.^. . .
   b b
   F@F
   ccc
 TTTTTTTTTTT
-
 `,
     String.raw`
 -----------
-
 |         |
-
 |  >      |
    r
 |   Z     |
@@ -150,14 +139,12 @@ TTTTTTTTTTT
 | @  < N  |
   c  r r
 -----------
-
 `,
     String.raw`
 @
 g
     @
     g
-
 
         @
         g
@@ -166,19 +153,33 @@ g
  @
  g
 
-
        @
        g
 `,
     String.raw`
+    #######
+    #/  <\#
+        r
+    #  #  #  
+    #-###-#
+     y   y
+#####  #  #
+#/ | v  >/#
+   y r  r
+#v #  #####
+ r
+# ### #
+#  #  #
+#\@  /#
+  c
+#######
+`,
+    String.raw`
 [][][][][][][]
-
 [            ]
-
 [          @ ]
            c
 [            ]
-   
 [ H          ]
   r
 [HHHRfHHH    ]
@@ -190,7 +191,6 @@ g
 [o  H   H    ]
  y  r   r
 [][][][][][][]
-
 `,
     String.raw`
 <    <    <
@@ -212,41 +212,32 @@ r    r
 |    |    <
 r    r    r
 HHHHHHHHHHHHHH
-
 `,
     String.raw`
 -----
-
 |@  |------
  c
 |  <|    <|
    rg    r
 ------| |--
-
       | |
-
      -|-|---
        g
      -     |
-
      |  Z  |
         r
      -    o|
           y
      -------
-
 `,
     String.raw`
      -|-|---
-
  -----     |
-
  |  <|  Z  |
     rg  r
  | |--    @|
           c
  | | -------
-
 -|-|--
   g
 |   n|
@@ -254,19 +245,15 @@ HHHHHHHHHHHHHH
 | ^ o|
   r y
 ------
-
 `,
     String.raw`
 --------
-
  v     
  r     
-      
-      
+
    ^  v
    r  r
-      
-      
+
  v
  r
      ^
@@ -301,56 +288,45 @@ r        aar
 r        a r
 `,
     String.raw`
-    #######
-
-    #/  <\#
-        r
-    #  #  #
-   
-    #-###-#
-     y   y
-#####  #  #
-
-#/ | v  >/#
-   y r  r
-#v #  #####
- r
-# ### #
-
-#  #  #
-
-#\@  /#
-  c
-#######
-
-`,
-    String.raw`
 /        \
-
 \   vf > /
     cc r
 / < @s   \
   r cc
 \        /
-
 /  <     \
    r
 \        /
-
 /     >  \
       r
 \        /
-
 /    <   \
      r
 \        /
-
+`,
+    String.raw`
+wwwwwwwwwwwwwwwwwwwww
+        | (_f>
+        y rrrr
+  '\------(oo)
+  rrrrrrrrrrrr
+    ||    (__)
+    rr    rrrr
+ |  ||---||        @
+ y  rrrrrrr        c
+         |  >_f>
+         y  rrrr
+    '\------(oo)
+    rrrrrrrrrrrr
+      ||    (__)
+      rr    rrrr
+    | ||---||
+    y rrrrrrr
+wwwwwwwwwwwwwwwwwwwww
 `,
     String.raw`
 +++++++++
-
 +       +
-
 + == ==L+
        r
 + ==&== +
@@ -360,11 +336,8 @@ r        a r
 +R==&== +
  r  c
 + == == +
-        
 +       +
-    
 +++++++++
-
 `,
     String.raw`
 .|. . . .
@@ -376,19 +349,14 @@ r        a r
        |
        r
 
-
 ---- ---@
 cccc cccc
-
-
-
 
 
 
 `,
     String.raw`
 ---------
-
        v
        r
 N   ^ 
@@ -398,21 +366,16 @@ r   r
  ^
  r
 
-
    @  @
    c  c
 ---------
-
 `,
     String.raw`
   ()()()()()()
-
   ()  o o   ()
       g g
             ()
-
             ()
-
      /@     ()
      aa       
 F>   \      ()
@@ -422,11 +385,9 @@ c
 F>          ()
 cb
             ()
-
   () o   o  ()
      g   g
   ()()()()()()
-
 `,
     String.raw`
 **************
@@ -456,7 +417,6 @@ pppppppppppppp
 `,
     String.raw`
 ###########
-
 #        o#
          g
 s#### #####
@@ -476,53 +436,20 @@ r
 #  @      #
    c
 ###########
-
 `,
     String.raw`
 |--------------|
-
 |v> @      <v ||
  rr c      rr y
 |-----    -----|
-
 |              |
-
 |-----    -----|
-
 ||  <^      ^> |
  y  rr      rr 
 |--------------|
-
-`,
-    String.raw`
-|-------------|
-
-|             |
-
-|             |
-
-|      ^      |
-       r
-|     Of      |
-      rr
-|     ---O    |
-      rrrr
-|    O-|-O    |
-     rrrrr
-|   F-----F   |
-    rrrrrrr
-|   v  |  v   |
-    p  r  p
-|      |      |
-       r
-| @    |    $ |
-  c    r    y
-|++++++-++++++|
-
 `,
     String.raw`
 =======================
-
 *   <                |
 r   p                p
 *   |  ============= |
@@ -544,29 +471,6 @@ r   p          ppppppp
 *   <                |
 r   p                p
 =======================
-
-`,
-    String.raw`
-wwwwwwwwwwwwwwwwwwwww
-
-        | (_f>
-        y rrrr
-  '\------(oo)
-  rrrrrrrrrrrr
-    ||    (__)
-    rr    rrrr
- |  ||---||        @
- y  rrrrrrr        c
-         |  >_f>
-         y  rrrr
-    '\------(oo)
-    rrrrrrrrrrrr
-      ||    (__)
-      rr    rrrr
-    | ||---||
-    y rrrrrrr
-wwwwwwwwwwwwwwwwwwwww
-
 `
     /*
   ,String.raw`

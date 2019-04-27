@@ -57,9 +57,9 @@ function startLevel() {
 }
 
 function parseLevel(str: string) {
-  const sl = str.split("\n");
-  const sx = Math.max(...sl.map(l => l.length));
-  const sy = (sl.length - 2) / 2;
+  const [lines, _] = terminal.getColorLines(str);
+  const sx = Math.max(...lines.map(l => l.length));
+  const sy = lines.length;
   const size = new Vector(sx, sy);
   view.setSize({
     x: (size.x + 2) * 6 * 2,
