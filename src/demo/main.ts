@@ -471,11 +471,76 @@ r   p          ppppppp
 *   <                |
 r   p                p
 =======================
+`,
+    String.raw`
+
+   ^
+   g
+   f
+   g
+   L
+   g
+          Rf>
+          ggg
+
+
+
+ <fL     R
+ ggg     g
+         f
+         g
+         v
+         g    
+
+             @
+             c
+`,
+    String.raw`
+-----
+|  R|
+   r    
+|L# | s
+ r    r
+|  @| F
+   c  r
+--- --v-  s
+      p   r
+sF>    #  F
+rrp       r
+  ---- ---v-
+          p
+     |     |
+     |R# #L|
+      r   r
+     |     |
+     -#-Z- ---
+        p
+        F|  $|
+        r   y
+        s-#---
+        r
+`,
+    String.raw`
+ All levels
+   solved!
+    #@#
+    yyy
+   #   #
+   y   y
+   @ #@#
+   y yyy
+   #
+   y
+    #@#
+    yyy
+
+============
+cccccccccccc
 `
     /*
   ,String.raw`
 `,
 */
-  ],
-  { testingLevel: -1 }
+  ]
+  //{ testingLevel: -1 }
 );
