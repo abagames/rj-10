@@ -519,6 +519,54 @@ r
   c    r    y
 |++++++-++++++|
 
+`,
+    String.raw`
+=======================
+
+*   <                |
+r   p                p
+*   |  ============= |
+r   p  ppppppppppppp p
+*   |  |  <  <     | |
+r   p  p  y  y     p p
+*   |  |       <   | |
+r   p  p       y   p p
+*   ====   =====   | |
+r   pppp   ppppp   p p
+* s@       |   |   | |
+r cc       p   p   p p
+*   ========   |   ===
+r   pppppppp   p   ppp
+*   |          |  <  
+r   p          p  y
+*   |          =======
+r   p          ppppppp
+*   <                |
+r   p                p
+=======================
+
+`,
+    String.raw`
+wwwwwwwwwwwwwwwwwwwww
+
+        | (_f>
+        y rrrr
+  '\------(oo)
+  rrrrrrrrrrrr
+    ||    (__)
+    rr    rrrr
+ |  ||---||        @
+ y  rrrrrrr        c
+         |  >_f>
+         y  rrrr
+    '\------(oo)
+    rrrrrrrrrrrr
+      ||    (__)
+      rr    rrrr
+    | ||---||
+    y rrrrrrr
+wwwwwwwwwwwwwwwwwwwww
+
 `
     /*
   ,String.raw`
