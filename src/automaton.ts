@@ -18,7 +18,6 @@ const actorTypes: {
   { chars: "L", updaterFunc: rotateLeft, interval: 2, initFunc: rotateInit },
   { chars: "@", updaterFunc: operated, interval: 1 },
   { chars: "F", updaterFunc: fire, interval: 4, initFunc: fireInit },
-  { chars: "w", initFunc: weakInit },
   { chars: "s", initFunc: slowInit },
   { chars: "f", initFunc: fastInit }
 ];
@@ -141,11 +140,6 @@ function arrow(a: Actor, u: any) {
   a.pos.add({ x: o[0], y: o[1] });
   const cs = a.getTerminalChars();
   if (!isEmpty(cs)) {
-    if (a.isWeak) {
-      play(3, "c");
-      a.remove();
-      return;
-    }
     if (cs.includes("/")) {
       ai += reflectSlash[ai];
     } else if (cs.includes("\\")) {
@@ -217,10 +211,6 @@ function operated(a: Actor) {
     return;
   }
   play(0, "<b");
-  if (a.isWeak) {
-    this.remove();
-    return;
-  }
   const ex = isEmpty(a.getTerminalChars({ x: 0, y: -o[1] }));
   const ey = isEmpty(a.getTerminalChars({ x: -o[0], y: 0 }));
   if (ex && !ey) {
@@ -269,10 +259,6 @@ function fire(a: Actor, u) {
     sa.isFired = true;
   });
   play(1, "b<b");
-}
-
-function weakInit(u, a: Actor) {
-  a.isWeak = true;
 }
 
 function slowInit(u, a: Actor) {

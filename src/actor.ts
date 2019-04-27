@@ -15,7 +15,6 @@ export class Actor extends sga.Actor {
   type: ActorType;
   size = new Vector();
   connecting: CharPart[];
-  isWeak = false;
   isFired = false;
   intervalChangeOffsets: { offset: VectorLike; ratio: number }[] = [];
 
@@ -60,16 +59,6 @@ export class Actor extends sga.Actor {
       this.isFired = false;
     } else {
       super.update();
-    }
-    if (
-      this.isWeak &&
-      (this.pos.x < 0 ||
-        this.pos.x + this.size.x >= terminal.size.x ||
-        this.pos.y < 0 ||
-        this.pos.y + this.size.y >= terminal.size.y)
-    ) {
-      this.remove();
-      return;
     }
     this.pos.x = wrap(this.pos.x, 0, terminal.size.x);
     this.pos.y = wrap(this.pos.y, 0, terminal.size.y);
