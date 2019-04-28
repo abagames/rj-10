@@ -26,6 +26,7 @@ let isInGame: boolean;
 let isSucceeded: boolean;
 let levels: string[];
 let currentLevel = 0;
+let localStorageKey: string;
 
 export type Options = {
   testingLevel: number;
@@ -39,8 +40,14 @@ const defaultOptions: Options = {
 export function init(_levels: string[], _options?: Options) {
   options = { ...defaultOptions, ..._options };
   levels = _levels;
+  localStorageKey = `rj-10-${getHash(levels[0])}`;
   if (options.testingLevel != null) {
     currentLevel = wrap(options.testingLevel, 0, levels.length);
+  } else {
+    try {
+      const data = JSON.parse(localStorage.getItem(localStorageKey));
+      currentLevel = wrap(data.level, 0, levels.length);
+    } catch {}
   }
   window.addEventListener("load", start);
 }
@@ -58,6 +65,12 @@ function start() {
 
 function startLevel() {
   parseLevel(levels[currentLevel]);
+  try {
+    localStorage.setItem(
+      localStorageKey,
+      JSON.stringify({ level: currentLevel })
+    );
+  } catch {}
 }
 
 function parseLevel(str: string) {
@@ -209,4 +222,13 @@ function countPlayer() {
     }
   }
   return c;
+}
+
+function getHash(str: string) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return hash;
 }
