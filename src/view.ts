@@ -36,7 +36,6 @@ export function init() {
   document.body.style.cssText = bodyCss;
   fxCanvas = fx.canvas();
   fxCanvas.colorShift = fx.wrap(colorShift);
-  fxCanvas.classList.add("centering");
   fxCanvas.style.cssText = canvasCss;
   canvas = document.createElement("canvas");
   context = canvas.getContext("2d");
