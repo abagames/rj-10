@@ -24,6 +24,9 @@ Arrow keys to move
 
   yellow   green  actor: Goal
   y        g
+
+  gray            actor: Wall
+    a
 `,
     String.raw`
 Character in actor
