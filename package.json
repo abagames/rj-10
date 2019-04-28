@@ -5,6 +5,8 @@
   "scripts": {
     "watch": "parcel src/demo/index.html -d tmp",
     "build": "parcel build src/demo/index.html -d docs --no-source-maps --public-url ./",
+    "watch_tutorial": "parcel src/demo/tutorial.html -d tmp",
+    "build_tutorial": "parcel build src/demo/tutorial.html -d docs --no-source-maps --public-url ./",
     "build_lib": "parcel build src/main.ts -d docs/build --no-source-maps --global rj10"
   },
   "author": "abagames",
