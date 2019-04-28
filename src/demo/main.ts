@@ -1,7 +1,7 @@
-import * as main from "../main";
+import * as rj10 from "../main";
 
 // cSpell: disable
-main.init(
+rj10.init(
   [
     String.raw`
 Move:

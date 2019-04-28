@@ -42,6 +42,10 @@ export function init(_levels: string[], _options?: Options) {
   if (options.testingLevel != null) {
     currentLevel = wrap(options.testingLevel, 0, levels.length);
   }
+  window.addEventListener("load", start);
+}
+
+function start() {
   view.init();
   keyboard.init({ onKeyDown: sound.resumeAudioContext });
   initPointer(sound.resumeAudioContext);

@@ -4,7 +4,8 @@
   "description": "Text tilemap based game development environment",
   "scripts": {
     "watch": "parcel src/demo/index.html -d tmp",
-    "build": "parcel build src/demo/index.html -d docs --no-source-maps --public-url ./"
+    "build": "parcel build src/demo/index.html -d docs --no-source-maps --public-url ./",
+    "build_lib": "parcel build src/main.ts -d docs/build --no-source-maps --global rj10"
   },
   "author": "abagames",
   "license": "MIT",

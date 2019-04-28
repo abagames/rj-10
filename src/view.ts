@@ -1,6 +1,5 @@
 import * as fx from "./glfx/";
 import colorShift from "./glfx/shader/colorshift";
-//import scanlines from "./glfx/shader/scanlines";
 import * as gcc from "gif-capture-canvas";
 import { Vector, VectorLike } from "./util/vector";
 
@@ -13,13 +12,32 @@ const isCapturing = false;
 let captureCanvas: HTMLCanvasElement;
 let captureContext: CanvasRenderingContext2D;
 let texture;
-//let ticks = 0;
+
+const bodyCss = `
+-webkit-touch-callout: none;
+-webkit-tap-highlight-color: black;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+background: black;
+color: white;
+`;
+const canvasCss = `
+position: absolute;
+left: 50%;
+top: 50%;
+transform: translate(-50%, -50%);
+width: 95vmin;
+height: 95vmin;
+`;
 
 export function init() {
+  document.body.style.cssText = bodyCss;
   fxCanvas = fx.canvas();
   fxCanvas.colorShift = fx.wrap(colorShift);
-  //fxCanvas.scanlines = fx.wrap(scanlines);
   fxCanvas.classList.add("centering");
+  fxCanvas.style.cssText = canvasCss;
   canvas = document.createElement("canvas");
   context = canvas.getContext("2d");
   context.imageSmoothingEnabled = false;
@@ -59,7 +77,6 @@ export function update() {
   fxCanvas
     .draw(texture)
     .colorShift()
-    //.scanlines(ticks * canvas.height * 0.000005)
     .bulgePinch(canvas.width / 2, canvas.height / 2, canvas.width * 0.8, 0.1)
     .vignette(0.2, 0.5)
     .update();
@@ -72,5 +89,4 @@ export function update() {
     );
     gcc.capture(captureCanvas);
   }
-  //ticks++;
 }
