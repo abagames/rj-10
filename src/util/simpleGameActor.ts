@@ -108,13 +108,13 @@ export class Pool {
       );
     }
     for (let i = 0; i < this.instances.length; ) {
-      const instance = this.instances[i];
-      if (instance.isAlive) {
-        instance.update();
-      }
       if (this.isRemovingAllInstances) {
         this.isRemovingAllInstances = false;
         break;
+      }
+      const instance = this.instances[i];
+      if (instance.isAlive) {
+        instance.update();
       }
       if (instance.isAlive) {
         i++;
