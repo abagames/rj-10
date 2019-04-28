@@ -4,15 +4,18 @@ import { range } from "./util/math";
 
 export const synths = [
   new Tone.Synth(getSynthParams("pulse")).chain(
-    new Tone.Volume(-12),
+    new Tone.Volume(-32),
     Tone.Master
   ),
   new Tone.Synth(getSynthParams("square")).chain(
-    new Tone.Volume(-12),
+    new Tone.Volume(-32),
     Tone.Master
   ),
-  new Tone.Synth(getSynthParams("triangle")).toMaster(),
-  new Tone.NoiseSynth().toMaster()
+  new Tone.Synth(getSynthParams("triangle")).chain(
+    new Tone.Volume(-16),
+    Tone.Master
+  ),
+  new Tone.NoiseSynth().chain(new Tone.Volume(-16), Tone.Master)
 ];
 const mmls: string[] = range(4).map(() => undefined);
 const parts: Tone.Part[] = range(4).map(() => undefined);
