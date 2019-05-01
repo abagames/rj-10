@@ -18,3 +18,7 @@ See the [tutorial code](src/demo/tutorial.ts) or the [demo code](src/demo/main.t
 #         #   \
 ###########   -- These lines also represent a text tilemap
 ```
+
+## Acknowledgement
+
+rj-10 is inspired by [Pix64](https://zappedcow.itch.io/pix64)
