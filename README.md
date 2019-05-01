@@ -19,6 +19,8 @@ See the [tutorial code](src/demo/tutorial.ts) or the [demo code](src/demo/main.t
 ###########   -- These lines also represent a text tilemap
 ```
 
+Use [this jsbin](https://jsbin.com/mejupig/edit?html,output) to write a game on a browser.
+
 ## Acknowledgement
 
 rj-10 is inspired by [Pix64](https://zappedcow.itch.io/pix64)
