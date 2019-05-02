@@ -62,7 +62,7 @@ export function setSize(_size: VectorLike) {
     captureCanvas.height = size.y;
     captureContext = captureCanvas.getContext("2d");
     captureContext.fillStyle = "black";
-    gcc.setOptions({ scale: 1, capturingFps: 30 });
+    gcc.setOptions({ scale: 1, capturingFps: 4, appFps: 4 });
   }
 }
 
