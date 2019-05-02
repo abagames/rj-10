@@ -21,6 +21,11 @@ See the [tutorial code](src/demo/tutorial.ts) or the [demo code](src/demo/main.t
 
 Use [this jsbin](https://jsbin.com/mejupig/edit?html,output) to write a game on a browser.
 
+![lv3](docs/lv3.gif)
+![lv6](docs/lv6.gif)
+![lv8](docs/lv8.gif)
+![lv13](docs/lv13.gif)
+
 ## Acknowledgement
 
 rj-10 is inspired by [Pix64](https://zappedcow.itch.io/pix64)
