@@ -14,8 +14,18 @@ const actorTypes: {
   initFunc?: Function;
 }[] = [
   { chars: arrowChars, updaterFunc: arrow, interval: 2 },
-  { chars: "R", updaterFunc: rotateRight, interval: 2, initFunc: rotateInit },
-  { chars: "L", updaterFunc: rotateLeft, interval: 2, initFunc: rotateInit },
+  {
+    chars: "R",
+    updaterFunc: rotateRight,
+    interval: 2,
+    initFunc: rotateRightInit
+  },
+  {
+    chars: "L",
+    updaterFunc: rotateLeft,
+    interval: 2,
+    initFunc: rotateLeftInit
+  },
   { chars: "@", updaterFunc: operated, interval: 1 },
   { chars: "F", updaterFunc: fire, interval: 4, initFunc: fireInit },
   { chars: "s", initFunc: slowInit },
@@ -173,8 +183,25 @@ function arrow(a: Actor, u: any) {
   }
 }
 
-function rotateInit(u) {
+function rotateRightInit(u, a: Actor) {
+  rotateInit(u, a, 2);
+}
+
+function rotateLeftInit(u, a: Actor) {
+  rotateInit(u, a, -2);
+}
+
+function rotateInit(u, a: Actor, rotateWay: number) {
   u.angle = 6;
+  for (let i = 0; i < 4; i++) {
+    const o = angleOffsets[wrap(6 + (i + 1) * rotateWay, 0, 8)];
+    const ofs = { x: o[0], y: o[1] };
+    const ie = isEmpty(a.getTerminalChars(ofs));
+    if (!ie) {
+      u.angle = wrap(6 + i * rotateWay, 0, 8);
+      break;
+    }
+  }
 }
 
 function rotateRight(a: Actor, u) {

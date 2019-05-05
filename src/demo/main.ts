@@ -56,9 +56,10 @@ Slide
 `,
     String.raw`
   ########
-  #R    o#
-   r    y
-  # ##   #
+  #     o#
+        y
+  #R##   #
+   r
   #   L###
       r
 ###L o##
